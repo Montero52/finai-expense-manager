@@ -1,0 +1,152 @@
+{% extends "base.html" %}
+
+{% block title %}Cài đặt - Quản lý Chi tiêu AI{% endblock %}
+
+{% block content %}
+    <header class="main-header">
+        <h1>Cài đặt</h1>
+        <p>Quản lý hồ sơ, bảo mật và tùy chỉnh của bạn.</p>
+    </header>
+    
+    <div class="settings-container">
+        
+        <nav class="settings-nav">
+            <a href="#profile" class="settings-nav-link active" data-tab="profile">
+                Hồ sơ
+            </a>
+            <a href="#account" class="settings-nav-link" data-tab="account">
+                Tài khoản
+            </a>
+            <a href="#security" class="settings-nav-link" data-tab="security">
+                Bảo mật
+            </a>
+            <a href="#preferences" class="settings-nav-link" data-tab="preferences">
+                Tùy chỉnh
+            </a>
+            <a href="#ai" class="settings-nav-link" data-tab="ai">
+                Cài đặt AI
+            </a>
+        </nav>
+        
+        <div class="settings-content">
+            
+            <div id="profile" class="tab-panel active">
+                <h2>Hồ sơ cá nhân</h2>
+                <form class="form-section">
+                    <div class="form-group">
+                        <label for="fullName">Họ và tên</label>
+                        <input type="text" id="fullName" value="[Tên người dùng hiện tại]">
+                    </div>
+                    <button type="submit" class="btn btn-primary">Lưu thay đổi</button>
+                </form>
+            </div>
+            
+            <div id="account" class="tab-panel">
+                <h2>Tài khoản</h2>
+                <form class="form-section">
+                    <h3>Đổi địa chỉ Email</h3>
+                    <div class="form-group">
+                        <label for="email">Email</label>
+                        <input type="email" id="email" value="[email@hientai.com]" disabled>
+                    </div>
+                    <div class="form-group">
+                        <label for="newEmail">Email mới</label>
+                        <input type="email" id="newEmail">
+                    </div>
+                    <button type="submit" class="btn btn-primary">Lưu Email mới</button>
+                </form>
+                
+                <hr>
+                
+                <form class="form-section">
+                    <h3>Đổi Mật khẩu</h3>
+                    <div class="form-group">
+                        <label for="currentPassword">Mật khẩu hiện tại</label>
+                        <input type="password" id="currentPassword">
+                    </div>
+                    <div class="form-group">
+                        <label for="newPassword">Mật khẩu mới</label>
+                        <input type="password" id="newPassword">
+                    </div>
+                    <div class="form-group">
+                        <label for="confirmNewPassword">Xác nhận mật khẩu mới</label>
+                        <input type="password" id="confirmNewPassword">
+                    </div>
+                    <button type="submit" class="btn btn-primary">Đổi Mật khẩu</button>
+                </form>
+            </div>
+            
+            <div id="security" class="tab-panel">
+                <h2>Bảo mật (2FA)</h2>
+                <div class="form-section two-fa-container">
+                    <h3>Xác thực hai yếu tố</h3>
+                    <p>Trạng thái: <strong>Chưa kích hoạt</strong></p>
+                    <p>Tăng cường bảo mật cho tài khoản của bạn bằng ứng dụng xác thực.</p>
+                    <button class="btn btn-primary">Bật xác thực</button>
+                </div>
+            </div>
+            
+            <div id="preferences" class="tab-panel">
+                <h2>Tùy chỉnh</h2>
+                <form class="form-section">
+                    <div class="form-group">
+                        <label for="currency">Đơn vị tiền tệ</label>
+                        <select id="currency">
+                            <option value="VND">VND (Việt Nam Đồng)</option>
+                            <option value="USD">USD (US Dollar)</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="language">Ngôn ngữ</label>
+                        <select id="language">
+                            <option value="vi">Tiếng Việt</option>
+                            <option value="en">English</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Lưu Tùy chỉnh</button>
+                </form>
+            </div>
+            
+            <div id="ai" class="tab-panel">
+                <h2>Cài đặt AI</h2>
+                <div class="form-section">
+                    <h3>Gợi ý thông minh</h3>
+                    <p>Cho phép AI tự động gợi ý danh mục khi bạn thêm một giao dịch mới.</p>
+                    <div class="toggle-switch-container">
+                        <label class="toggle-switch">
+                            <input type="checkbox" id="aiSuggestion" checked>
+                            <span class="slider round"></span>
+                        </label>
+                        <label for="aiSuggestion" class="toggle-label">Bật gợi ý AI</label>
+                    </div>
+                </div>
+            </div>
+            
+        </div> 
+    </div> 
+{% endblock %}
+
+{% block scripts %}
+    <script>
+        // Logic chuyển đổi Tab (JS riêng cho trang Settings)
+        const navLinks = document.querySelectorAll('.settings-nav-link');
+        const tabPanels = document.querySelectorAll('.tab-panel');
+
+        navLinks.forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault(); // Ngăn chặn hành vi nhảy trang mặc định
+
+                // Lấy ID tab cần mở
+                const tabId = this.getAttribute('data-tab');
+
+                // 1. Xóa class active cũ
+                navLinks.forEach(nav => nav.classList.remove('active'));
+                tabPanels.forEach(panel => panel.classList.remove('active'));
+
+                // 2. Bật class active cho tab mới
+                this.classList.add('active');
+                document.getElementById(tabId).classList.add('active');
+            });
+        });
+    </script>
+{% endblock %}

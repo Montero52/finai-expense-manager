@@ -1,0 +1,156 @@
+{% extends "base.html" %}
+
+{% block title %}Ngân sách - Quản lý Chi tiêu AI{% endblock %}
+
+{% block content %}
+    <header class="main-header with-button">
+        <div>
+            <h1>Quản lý Ngân sách</h1>
+            <p>Thiết lập, theo dõi giới hạn chi tiêu của bạn.</p>
+        </div>
+        <button class="btn btn-primary" id="openBudgetModal">
+            <i class="fas fa-plus"></i> Tạo Ngân sách mới
+        </button>
+    </header>
+    
+    <section class="budget-list-container">
+        <h2>Ngân sách đang hoạt động</h2>
+        
+        <div class="budget-grid">
+            
+            <div class="budget-card">
+                <div class="budget-card-header">
+                    <h3><i class="fas fa-utensils"></i> Ăn uống</h3>
+                    <div class="budget-actions">
+                        <button class="btn-icon"><i class="fas fa-edit"></i></button>
+                        <button class="btn-icon btn-delete"><i class="fas fa-trash"></i></button>
+                    </div>
+                </div>
+                <div class="budget-card-body">
+                    <p class="budget-card-amount">3.200.000 / 4.000.000 VND</p>
+                    <div class="progress-bar">
+                        <div class="progress-bar-fill" style="width: 80%;"></div>
+                    </div>
+                    <p class="budget-card-timeleft"><i class="fas fa-clock"></i> Còn 10 ngày</p>
+                </div>
+                <div class="budget-card-footer">
+                    <span>Áp dụng cho:</span>
+                    <span class="tag">Ăn uống</span>
+                    <span class="tag">Cafe</span>
+                    <span class="tag">Nhà hàng</span>
+                </div>
+            </div>
+
+            <div class="budget-card">
+                <div class="budget-card-header">
+                    <h3><i class="fas fa-film"></i> Giải trí</h3>
+                    <div class="budget-actions">
+                        <button class="btn-icon"><i class="fas fa-edit"></i></button>
+                        <button class="btn-icon btn-delete"><i class="fas fa-trash"></i></button>
+                    </div>
+                </div>
+                <div class="budget-card-body">
+                    <p class="budget-card-amount exceeded">1.700.000 / 1.500.000 VND</p>
+                    <div class="progress-bar">
+                        <div class="progress-bar-fill exceeded" style="width: 100%;"></div>
+                    </div>
+                    <p class="budget-card-timeleft"><i class="fas fa-clock"></i> Còn 10 ngày</p>
+                </div>
+                <div class="budget-card-footer">
+                    <span>Áp dụng cho:</span>
+                    <span class="tag">Xem phim</span>
+                </div>
+            </div>
+
+        </div> 
+    </section>
+
+    <div id="budgetModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Tạo Ngân sách mới</h2>
+                <span class="modal-close" id="closeBudgetModal">&times;</span>
+            </div>
+            
+            <form id="budgetForm" class="modal-body">
+                <div class="form-group">
+                    <label for="budgetName">Tên Ngân sách</label>
+                    <input type="text" id="budgetName" placeholder="Ví dụ: Ngân sách Ăn uống" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="budgetAmount">Số tiền Giới hạn</label>
+                    <input type="number" id="budgetAmount" placeholder="Ví dụ: 5000000" required>
+                </div>
+                
+                <div class="form-group-inline">
+                    <div class="form-group">
+                        <label for="budgetStart">Từ ngày</label>
+                        <input type="date" id="budgetStart" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="budgetEnd">Đến ngày</label>
+                        <input type="date" id="budgetEnd" required>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label>Áp dụng cho các Danh mục</label>
+                    <div class="category-select-list">
+                        <label><input type="checkbox" name="categories" value="dm1"> Ăn uống</label>
+                        <label><input type="checkbox" name="categories" value="dm2"> Cafe</label>
+                        <label><input type="checkbox" name="categories" value="dm3"> Mua sắm</label>
+                        <label><input type="checkbox" name="categories" value="dm4"> Giải trí</label>
+                        <label><input type="checkbox" name="categories" value="dm5"> Đi lại</label>
+                    </div>
+                </div>
+            </form>
+            
+            <div class="modal-footer">
+                <button class="btn btn-secondary" id="cancelBudgetModal">Hủy</button>
+                <button class="btn btn-primary" form="budgetForm">Lưu Ngân sách</button>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block scripts %}
+    <script>
+        // Logic JS để Bật/Tắt Modal
+        document.addEventListener("DOMContentLoaded", function() {
+            const modal = document.getElementById('budgetModal');
+            const openBtn = document.getElementById('openBudgetModal');
+            const closeBtn = document.getElementById('closeBudgetModal');
+            const cancelBtn = document.getElementById('cancelBudgetModal');
+
+            // Mở Modal
+            if (openBtn) {
+                openBtn.addEventListener('click', () => {
+                    modal.style.display = 'flex';
+                });
+            }
+
+            // Đóng Modal (Nút X)
+            if (closeBtn) {
+                closeBtn.addEventListener('click', () => {
+                    modal.style.display = 'none';
+                });
+            }
+
+            // Đóng Modal (Nút Hủy)
+            if (cancelBtn) {
+                cancelBtn.addEventListener('click', (e) => {
+                    e.preventDefault(); // Tránh submit form
+                    modal.style.display = 'none';
+                });
+            }
+
+            // Đóng khi click ra ngoài vùng Modal
+            window.addEventListener('click', (event) => {
+                if (event.target == modal) {
+                    modal.style.display = 'none';
+                }
+            });
+        });
+    </script>
+{% endblock %}

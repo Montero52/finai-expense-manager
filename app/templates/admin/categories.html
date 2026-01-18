@@ -1,0 +1,245 @@
+{% extends "base.html" %}
+
+{% block title %}Quản lý Danh mục - Admin Panel{% endblock %}
+
+{% block css %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='assets/css/admin.css') }}">
+{% endblock %}
+
+{% block content %}
+    <header class="main-header">
+        <h1>Quản lý Danh mục Gốc</h1>
+        <p>Thêm, sửa, hoặc xóa các danh mục mặc định của hệ thống.</p>
+    </header>
+
+    <div class="widget">
+        <h3 class="widget-title">Thêm / sửa danh mục</h3>
+        <form class="add-category-form"
+              id="admin-category-form"
+              action="#"
+              method="POST"
+              style="display: flex; gap: 15px; align-items: flex-end; margin-bottom: 30px;">
+            <!-- ẩn: để biết đang sửa ID nào -->
+            <input type="hidden" id="edit-category-id">
+
+            <div class="form-group" style="flex: 1; margin-bottom: 0;">
+                <label for="category-name">Tên danh mục:</label>
+                <input type="text"
+                       id="category-name"
+                       name="category-name"
+                       placeholder="Ví dụ: Ăn uống..."
+                       required>
+            </div>
+
+            <div class="form-group" style="width: 200px; margin-bottom: 0;">
+                <label for="category-type">Loại danh mục:</label>
+                <select id="category-type" name="category-type">
+                    <option value="chi">Chi tiêu</option>
+                    <option value="thu">Thu nhập</option>
+                </select>
+            </div>
+
+            <button type="submit"
+                    class="btn btn-success"
+                    id="category-submit-btn"
+                    style="height: 46px;">
+                <i class="fas fa-plus-circle"></i>
+                <span class="btn-text">Thêm</span>
+            </button>
+
+            <button type="button"
+                    class="btn btn-secondary"
+                    id="category-cancel-btn"
+                    style="height: 46px; display: none;">
+                Hủy
+            </button>
+        </form>
+
+        <hr>
+
+        <h3 class="widget-title">Danh sách hiện tại</h3>
+        <table class="category-table">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Tên Danh mục</th>
+                    <th>Loại Danh mục</th>
+                    <th style="text-align: right;">Hành động</th>
+                </tr>
+            </thead>
+            <tbody id="admin-category-tbody">
+                <tr>
+                    <td colspan="4" style="text-align: center; padding: 15px;">
+                        Đang tải dữ liệu...
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const tbody      = document.getElementById('admin-category-tbody');
+const form       = document.getElementById('admin-category-form');
+    const nameInput  = document.getElementById('category-name');
+    const typeSelect = document.getElementById('category-type');
+    const idHidden   = document.getElementById('edit-category-id');
+    const submitBtn  = document.getElementById('category-submit-btn');
+    const cancelBtn  = document.getElementById('category-cancel-btn');
+    const btnTextEl  = submitBtn.querySelector('.btn-text');
+
+    // Lưu tạm danh sách để tìm nhanh khi sửa
+    let adminCategories = [];
+
+    function renderTypeBadge(type) {
+        if (type === 'thu') {
+            return '<span class="type-badge type-income">Thu nhập</span>';
+        }
+        return '<span class="type-badge type-expense">Chi tiêu</span>';
+    }
+
+    function resetForm() {
+        idHidden.value = '';
+        nameInput.value = '';
+        typeSelect.value = 'chi';
+        if (btnTextEl) {
+            btnTextEl.textContent = 'Thêm';
+        }
+        submitBtn.classList.remove('btn-warning');
+        cancelBtn.style.display = 'none';
+    }
+
+    async function loadAdminCategories() {
+        try {
+            const res = await fetch('/api/categories');   // dùng API có sẵn
+            if (!res.ok) {
+                throw new Error('HTTP ' + res.status);
+            }
+            const data = await res.json();
+            adminCategories = data || [];
+
+            tbody.innerHTML = '';
+
+            if (adminCategories.length === 0) {
+                tbody.innerHTML =
+                    '<tr><td colspan="4" style="text-align:center; padding: 15px;">Chưa có danh mục nào.</td></tr>';
+                return;
+            }
+
+            adminCategories.forEach(c => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td>${c.MaDanhMuc}</td>
+                    <td>${c.TenDanhMuc}</td>
+                    <td>${renderTypeBadge(c.LoaiDanhMuc)}</td>
+                    <td style="text-align: right;">
+                        <button class="btn btn-secondary btn-sm" onclick="adminEditCategory('${c.MaDanhMuc}')">
+                            <i class="fas fa-edit"></i>
+                        </button>
+                        <button class="btn btn-danger btn-sm" onclick="adminDeleteCategory('${c.MaDanhMuc}')">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+        } catch (err) {
+            console.error(err);
+            tbody.innerHTML =
+                '<tr><td colspan="4" style="text-align:center; color:red; padding: 15px;">Lỗi tải danh mục. Hãy tải lại trang.</td></tr>';
+        }
+    }
+
+    // Thêm / Sửa
+    form.addEventListener('submit', async function (e) {
+        e.preventDefault();
+
+        const payload = {
+            name: nameInput.value.trim(),
+type: typeSelect.value
+        };
+
+        if (!payload.name) {
+            alert('Tên danh mục không được để trống.');
+            return;
+        }
+
+        let url = '/api/categories';
+        let method = 'POST';
+        const isEdit = !!idHidden.value;
+
+        if (isEdit) {
+            url = `/api/categories/${idHidden.value}`;
+            method = 'PUT';
+        }
+
+        try {
+            const res = await fetch(url, {
+                method: method,
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            });
+
+            const result = await res.json().catch(() => ({}));
+
+            if (res.ok && result.status === 'success') {
+                alert(isEdit ? 'Cập nhật danh mục thành công!' : 'Thêm danh mục thành công!');
+                resetForm();
+                loadAdminCategories();
+            } else {
+                alert('Đã xảy ra lỗi khi lưu danh mục.');
+                console.error(result);
+            }
+        } catch (err) {
+            console.error(err);
+            alert('Lỗi kết nối tới server.');
+        }
+    });
+
+    // Hủy chế độ sửa
+    cancelBtn.addEventListener('click', function () {
+        resetForm();
+    });
+
+    // Các hàm global cho nút onclick trong bảng
+    window.adminEditCategory = function (id) {
+        const cat = adminCategories.find(c => c.MaDanhMuc === id);
+        if (!cat) return;
+
+        idHidden.value = cat.MaDanhMuc;
+        nameInput.value = cat.TenDanhMuc;
+        typeSelect.value = cat.LoaiDanhMuc;
+
+        if (btnTextEl) {
+            btnTextEl.textContent = 'Cập nhật';
+        }
+        submitBtn.classList.add('btn-warning');
+        cancelBtn.style.display = 'inline-block';
+    };
+
+    window.adminDeleteCategory = async function (id) {
+        if (!confirm('Bạn có chắc muốn xóa danh mục này?')) return;
+
+        try {
+            const res = await fetch(`/api/categories/${id}`, { method: 'DELETE' });
+            const result = await res.json().catch(() => ({}));
+
+            if (res.ok && result.status === 'success') {
+                loadAdminCategories();
+            } else {
+                alert('Xóa danh mục thất bại.');
+                console.error(result);
+            }
+        } catch (err) {
+            console.error(err);
+            alert('Lỗi kết nối tới server.');
+        }
+    };
+
+    // Load lần đầu
+    loadAdminCategories();
+});
+</script>
+{% endblock %}

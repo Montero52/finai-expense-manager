@@ -1,0 +1,145 @@
+/* Thiết lập cơ bản cho toàn trang */
+body, html {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    font-family: 'Poppins', sans-serif;
+    background: #f0f2f5; /* Một màu xám rất nhạt */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Container chính của form đăng nhập */
+.login-container {
+    background: #ffffff;
+    padding: 2.5rem;
+    border-radius: 10px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 400px;
+    box-sizing: border-box; /* Đảm bảo padding không làm vỡ layout */
+}
+
+/* Tiêu đề (h2) và tiêu đề phụ (span) */
+.login-container h2 {
+    font-size: 1.8rem;
+    font-weight: 600;
+    color: #333;
+    margin-top: 0;
+    margin-bottom: 0.5rem;
+}
+.login-container h2 span {
+    font-size: 0.9rem;
+    font-weight: 400;
+    color: #777;
+    display: block;
+    margin-top: 5px;
+}
+
+/* Nhóm chứa label và input */
+.input-group {
+    margin-bottom: 1.25rem;
+}
+
+.input-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 500;
+    color: #555;
+}
+
+/* Ô nhập liệu */
+.input-group input {
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    box-sizing: border-box; /* Đảm bảo padding không làm vỡ layout */
+    font-size: 1rem;
+    font-family: 'Poppins', sans-serif;
+}
+
+.input-group input:focus {
+    outline: none;
+    border-color: #007bff; /* Màu xanh khi focus */
+    box-shadow: 0 0 5px rgba(0,123,255,0.2);
+}
+
+/* Nhóm tùy chọn (Quên mật khẩu) */
+.options {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 1.5rem;
+}
+
+.options .forgot-password {
+    color: #007bff;
+    text-decoration: none;
+    font-size: 0.9rem;
+}
+
+.options .forgot-password:hover {
+    text-decoration: underline;
+}
+
+/* Nút đăng nhập chính */
+.login-button {
+    width: 100%;
+    padding: 0.85rem;
+    border: none;
+    border-radius: 5px;
+    background-color: #007bff; /* Màu xanh dương (phù hợp công nghệ) */
+    color: white;
+    font-size: 1rem;
+    font-weight: 600;
+    font-family: 'Poppins', sans-serif;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.login-button:hover {
+    background-color: #0056b3; /* Màu xanh đậm hơn khi hover */
+}
+
+/* Link đăng ký ở cuối */
+.register-link {
+    margin-top: 1.5rem;
+    text-align: center;
+    font-size: 0.9rem;
+    color: #555;
+}
+
+.register-link a {
+    color: #007bff;
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.register-link a:hover {
+    text-decoration: underline;
+}
+
+/* Style chung cho thông báo */
+.alert {
+    padding: 15px;
+    margin-bottom: 20px;
+    border: 1px solid transparent;
+    border-radius: 4px;
+    text-align: center; /* Căn giữa chữ */
+}
+
+/* Nếu category là 'error' (Lỗi) -> Màu đỏ */
+.alert-error {
+    color: #a94442;
+    background-color: #f2dede;
+    border-color: #ebccd1;
+}
+
+/* Nếu category là 'success' (Thành công) -> Màu xanh */
+.alert-success {
+    color: #3c763d;
+    background-color: #dff0d8;
+    border-color: #d6e9c6;
+}
+

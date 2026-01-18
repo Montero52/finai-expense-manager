@@ -1,0 +1,25 @@
+# Bỏ qua file cấu hình chứa mật khẩu
+.env
+
+# Bỏ qua file database (Dữ liệu thật không nên đưa lên, người khác tải về sẽ tự tạo DB mới)
+instance/
+*.db
+*.sqlite3
+    
+# Bỏ qua các file rác của Python
+__pycache__/
+*.pyc
+
+# Bỏ qua môi trường ảo (nếu có dùng)
+# 2. Bỏ qua môi trường ảo (Virtual Environment)
+# 2. Bỏ qua môi trường ảo (Virtual Environment)
+.venv/
+venv/
+env/
+ENV/
+.idea/
+.vscode/
+
+# File rác hệ điều hành
+.DS_Store
+Thumbs.db

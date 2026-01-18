@@ -1,0 +1,157 @@
+{% extends "base.html" %}
+
+{% block title %}Nền tảng - Quản lý Chi tiêu AI{% endblock %}
+
+{% block content %}
+    <header class="main-header">
+        <h1>Quản lý Nền tảng</h1>
+        <p>Quản lý các nguồn tiền và danh mục chi tiêu của bạn.</p>
+    </header>
+
+    <div class="settings-tabs">
+        <a href="#wallets" class="tab-link active" data-tab="wallets">
+            <i class="fas fa-wallet"></i> Nguồn tiền
+        </a>
+        <a href="#categories" class="tab-link" data-tab="categories">
+            <i class="fas fa-tags"></i> Danh mục
+        </a>
+    </div>
+
+    <div class="settings-content-wrapper">
+        
+        <div id="wallets" class="tab-panel active">
+            <div class="panel-header">
+                <h2>Danh sách Nguồn tiền</h2>
+                <button class="btn btn-primary" data-modal="walletModal">
+                    <i class="fas fa-plus"></i> Thêm Nguồn tiền
+                </button>
+            </div>
+            
+            <table class="crud-table">
+                <thead>
+                    <tr>
+                        <th>Tên Nguồn tiền</th>
+                        <th>Loại</th>
+                        <th>Số dư Hiện tại</th>
+                        <th style="text-align: right;">Hành động</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr><td colspan="4" style="text-align: center;">Đang tải dữ liệu...</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div id="categories" class="tab-panel">
+            <div class="panel-header">
+                <h2>Danh sách Danh mục</h2>
+                <button class="btn btn-primary" data-modal="categoryModal">
+                    <i class="fas fa-plus"></i> Thêm Danh mục
+                </button>
+            </div>
+            <table class="crud-table">
+                <thead>
+                    <tr>
+                        <th>Tên Danh mục</th>
+                        <th>Loại (Thu/Chi)</th>
+                        <th>Danh mục Cha</th>
+                        <th>Hành động</th>
+                    </tr>
+                </thead>
+                <tbody>
+                     <tr><td colspan="4" style="text-align: center;">(Chức năng đang phát triển)</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+    </div> 
+    <div id="categoryModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="categoryModalTitle">Thêm Danh mục mới</h2> <span class="modal-close" data-modal="categoryModal">&times;</span>
+            </div>
+            <form id="categoryForm" class="modal-body">
+                <input type="hidden" id="edit-category-id"> <div class="form-group">
+                    <label for="catName">Tên Danh mục</label>
+                    <input type="text" id="catName" placeholder="Ví dụ: Ăn sáng, Xăng xe..." required>
+                </div>
+                <div class="form-group">
+                    <label for="catType">Loại</label>
+                    <select id="catType">
+                        <option value="chi">Chi tiêu</option>
+                        <option value="thu">Thu nhập</option>
+                    </select>
+                </div>
+            </form>
+            <div class="modal-footer">
+                <button class="btn btn-secondary modal-cancel" data-modal="categoryModal">Hủy</button>
+                <button class="btn btn-primary" form="categoryForm">Lưu</button>
+            </div>
+        </div>
+    </div>
+    
+    <div id="walletModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="walletModalTitle">Thêm Nguồn tiền</h2> <span class="modal-close" data-modal="walletModal">&times;</span>
+            </div>
+            <form id="walletForm" class="modal-body">
+                <input type="hidden" id="edit-wallet-id"> <div class="form-group">
+                    <label for="walletName">Tên Nguồn tiền</label>
+                    <input type="text" id="walletName" placeholder="Ví dụ: Ví MoMo..." required>
+                </div>
+                <div class="form-group">
+                    <label for="walletType">Loại Nguồn tiền</label>
+                    <input type="text" id="walletType" placeholder="Ví dụ: Tiền mặt..." required>
+                </div>
+                <div class="form-group">
+                    <label for="walletBalance">Số dư hiện tại</label>
+                    <input type="number" id="walletBalance" required>
+                </div>
+            </form>
+            <div class="modal-footer">
+                <button class="btn btn-secondary modal-cancel" data-modal="walletModal">Hủy</button>
+                <button class="btn btn-primary" form="walletForm">Lưu</button>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block scripts %}
+    <script src="{{ url_for('static', filename='assets/js/foundations.js') }}"></script>
+    <script>
+        // Logic chuyển Tab và Modal
+        const tabLinks = document.querySelectorAll('.tab-link');
+        const tabPanels = document.querySelectorAll('.tab-panel');
+
+        tabLinks.forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                const tabId = this.getAttribute('data-tab');
+                tabLinks.forEach(nav => nav.classList.remove('active'));
+                tabPanels.forEach(panel => panel.classList.remove('active'));
+                this.classList.add('active');
+                document.getElementById(tabId).classList.add('active');
+            });
+        });
+
+        // Modal Logic chung
+        const openModalButtons = document.querySelectorAll('[data-modal]');
+        const closeModalButtons = document.querySelectorAll('.modal-close, .modal-cancel');
+
+        openModalButtons.forEach(button => {
+            button.addEventListener('click', (e) => {
+                e.preventDefault();
+                const modalId = button.getAttribute('data-modal');
+                document.getElementById(modalId).style.display = 'flex';
+            });
+        });
+
+        closeModalButtons.forEach(button => {
+            button.addEventListener('click', (e) => {
+                e.preventDefault();
+                button.closest('.modal').style.display = 'none';
+            });
+        });
+    </script>
+{% endblock %}

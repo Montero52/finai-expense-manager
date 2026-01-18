@@ -1,0 +1,36 @@
+<aside class="sidebar">
+    <div class="sidebar-header">
+        <h3>
+            {% if session.get('user_role') == 'admin' %}
+                Admin
+            {% else %}
+                AI Finance
+            {% endif %}
+        </h3>
+    </div>
+    
+    <nav class="sidebar-nav">
+        <ul>
+            {% if session.get('user_role') == 'admin' %}
+                <li><a href="{{ url_for('users') }}"><span>Quản lý Người dùng</span></a></li>
+                <li><a href="{{ url_for('categories') }}"><span>Quản lý Danh mục</span></a></li>
+                <li><a href="{{ url_for('ai_monitoring') }}"><span>Giám sát AI</span></a></li>
+                <li><a href="{{ url_for('chatbot_logs') }}"><span>Lịch sử Chatbot</span></a></li>
+            {% else %}
+                <li><a href="{{ url_for('dashboard') }}"><span>Tổng quan</span></a></li>
+                <li><a href="{{ url_for('transactions') }}"><span>Giao dịch</span></a></li>
+                <li><a href="{{ url_for('budgets') }}"><span>Ngân sách</span></a></li>
+                <li><a href="{{ url_for('reports') }}"><span>Báo cáo</span></a></li>
+                <li><a href="{{ url_for('foundations') }}"><span>Nền tảng</span></a></li>
+                <li><a href="{{ url_for('settings') }}"><span>Cài đặt</span></a></li>
+            {% endif %}
+        </ul>
+    </nav>
+    
+    <div class="sidebar-footer">
+        <a href="{{ url_for('logout') }}">
+            <i class="fas fa-sign-out-alt"></i>
+            <span>Đăng xuất</span>
+        </a>
+    </div>
+</aside>

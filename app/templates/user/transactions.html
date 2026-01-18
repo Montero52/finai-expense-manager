@@ -1,0 +1,117 @@
+{% extends "base.html" %}
+
+{% block title %}Giao dịch - Quản lý Chi tiêu AI{% endblock %}
+
+{% block content %}
+    <header class="main-header">
+        <h1>Quản lý Giao dịch</h1>
+        <p>Thêm mới, sửa đổi và xem lại tất cả các giao dịch của bạn.</p>
+    </header>
+    
+    <div class="transaction-page-content">
+        
+        <div class="transaction-form-card widget"> <div class="form-tabs">
+                <button id="tab-expense" class="tab-button active" onclick="switchTab('expense')">
+                    <i class="fas fa-minus-circle"></i> Chi tiêu
+                </button>
+                <button id="tab-income" class="tab-button" onclick="switchTab('income')">
+                    <i class="fas fa-plus-circle"></i> Thu nhập
+                </button>
+                <button id="tab-transfer" class="tab-button" onclick="switchTab('transfer')">
+                    <i class="fas fa-exchange-alt"></i> Chuyển khoản
+                </button>
+            </div>
+
+            <form id="transaction-form">
+                <input type="hidden" id="edit-transaction-id">
+                <input type="hidden" id="transaction-type" value="expense">
+
+                <div class="form-group">
+                    <label for="amount">Số tiền:</label>
+                    <input type="number" id="amount" placeholder="0" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="description">Mô tả (AI sẽ tự động đoán danh mục):</label>
+                    <input type="text" id="description" placeholder="Ví dụ: Ăn phở bò, Đổ xăng..." autocomplete="off">
+                </div>
+
+                <div id="group-category" class="form-group form-group-expense form-group-income">
+                    <label for="category">Danh mục:</label>
+                    <div class="category-wrapper" style="position: relative;">
+                        <select id="category">
+                            <option value="">-- Đang tải danh mục... --</option>
+                        </select>
+                        <i id="ai-loading-icon" class="fas fa-sync-alt fa-spin" 
+                           style="display: none; position: absolute; right: 10px; top: 12px; color: #007bff;"></i>
+                    </div>
+                </div>
+
+                <div id="group-source-wallet" class="form-group form-group-expense form-group-transfer">
+                    <label for="source-wallet">Từ nguồn tiền (Ví):</label>
+                    <select id="source-wallet">
+                        <option value="">-- Chọn ví --</option>
+                    </select>
+                </div>
+
+                <div id="group-dest-wallet" class="form-group form-group-income form-group-transfer" style="display: none;">
+                    <label for="dest-wallet">Đến nguồn tiền (Ví):</label>
+                    <select id="dest-wallet">
+                        <option value="">-- Chọn ví --</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="date">Ngày:</label>
+                    <input type="date" id="date" required>
+                </div>
+
+                <div style="display: flex; gap: 10px;">
+                    <button type="submit" class="btn btn-primary btn-submit" id="btn-save" style="flex: 1;">Lưu Giao dịch</button>
+                    <button type="button" class="btn btn-secondary" id="btn-cancel-edit" style="display: none; width: 100px;">Hủy</button>
+                </div>
+            </form>
+        </div>
+
+        <div class="transaction-list-card widget"> <header class="list-header" style="flex-direction: column; align-items: stretch; gap: 15px;">
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <h2>Lịch sử Giao dịch</h2>
+                    <div class="search-box">
+                        <i class="fas fa-search" style="color: #999; margin-right: 5px;"></i>
+                        <input type="text" id="search-keyword" class="search-bar" placeholder="Tìm nội dung..." style="border: none; outline: none;">
+                    </div>
+                </div>
+
+                <div class="filter-bar" style="display: flex; gap: 10px; flex-wrap: wrap;">
+                    <input type="date" id="filter-date-start" class="filter-input" title="Từ ngày">
+                    <span style="align-self: center;">-</span>
+                    <input type="date" id="filter-date-end" class="filter-input" title="Đến ngày">
+
+                    <select id="filter-type" class="filter-input">
+                        <option value="">Tất cả loại</option>
+                        <option value="chi">Chi tiêu</option>
+                        <option value="thu">Thu nhập</option>
+                        <option value="chuyen">Chuyển khoản</option>
+                    </select>
+
+                    <button class="btn btn-secondary" onclick="resetFilters()" style="padding: 5px 10px;" title="Làm mới">
+                        <i class="fas fa-sync-alt"></i>
+                    </button>
+                </div>
+            </header>
+            
+            <ul class="transaction-list">
+                <p style="text-align: center; padding: 20px; color: #999;">Đang tải dữ liệu...</p>
+            </ul>
+        </div>
+
+    </div> 
+{% endblock %}
+
+{% block scripts %}
+    <script src="{{ url_for('static', filename='assets/js/transactions.js') }}"></script>
+    <script>
+        // Set ngày mặc định là hôm nay
+        document.getElementById('date').valueAsDate = new Date();
+    </script>
+{% endblock %}

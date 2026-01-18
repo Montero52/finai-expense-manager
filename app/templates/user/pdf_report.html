@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <title>Báo cáo Tài chính</title>
+    <style>
+        /* Font chữ và Reset cơ bản */
+        body { 
+            font-family: 'Times New Roman', serif; /* Font chuẩn văn bản */
+            font-size: 14px; 
+            color: #000; 
+            margin: 0;
+            padding: 20px;
+            background: white;
+        }
+        
+        /* Cấu hình khi in */
+        @media print {
+            @page { size: A4; margin: 1.5cm; }
+            body { -webkit-print-color-adjust: exact; } /* Giữ màu sắc khi in */
+            .no-print { display: none; } /* Ẩn các nút không cần thiết */
+        }
+
+        /* Header */
+        .header { text-align: center; margin-bottom: 30px; border-bottom: 2px solid #000; padding-bottom: 10px; }
+        .header h1 { margin: 0 0 5px 0; font-size: 24px; text-transform: uppercase; }
+        .header p { margin: 0; font-size: 14px; font-style: italic; }
+
+        /* Thông tin */
+        .info { margin-bottom: 20px; }
+        .info p { margin: 5px 0; }
+
+        /* Bảng tóm tắt */
+        .summary-box { 
+            display: flex; justify-content: space-between; 
+            border: 1px solid #000; padding: 15px; margin-bottom: 20px; 
+            background-color: #f9f9f9;
+        }
+        .sum-item { font-size: 16px; }
+        
+        /* Bảng dữ liệu */
+        table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+        th, td { border: 1px solid #000; padding: 8px 10px; text-align: left; }
+        th { background-color: #f0f0f0; font-weight: bold; text-align: center; }
+        
+        /* Màu sắc số tiền */
+        .amount-chi { color: #c0392b; font-weight: bold; }
+        .amount-thu { color: #27ae60; font-weight: bold; }
+        
+        /* Footer */
+        .footer { margin-top: 40px; text-align: right; font-style: italic; font-size: 12px; }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>BÁO CÁO TÀI CHÍNH</h1>
+        <p>Hệ thống Quản lý Chi tiêu Cá nhân (AI Finance)</p>
+    </div>
+
+    <div class="info">
+        <p><strong>Người dùng:</strong> {{ user_name }}</p>
+        <p><strong>Thời gian báo cáo:</strong> {{ start_date }} đến {{ end_date }}</p>
+    </div>
+
+    <div class="summary-box">
+        <div class="sum-item"><strong>Tổng thu:</strong> <span class="amount-thu">+{{ "{:,.0f}".format(total_income) }} đ</span></div>
+        <div class="sum-item"><strong>Tổng chi:</strong> <span class="amount-chi">-{{ "{:,.0f}".format(total_expense) }} đ</span></div>
+        <div class="sum-item"><strong>Còn lại:</strong> {{ "{:,.0f}".format(total_income - total_expense) }} đ</div>
+    </div>
+
+    <table>
+        <thead>
+            <tr>
+                <th style="width: 15%;">Ngày</th>
+                <th style="width: 20%;">Danh mục</th>
+                <th>Nội dung</th>
+                <th style="width: 15%;">Ví</th>
+                <th style="width: 15%;">Số tiền</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for t in transactions %}
+            <tr>
+                <td style="text-align: center;">{{ t.date.strftime('%d/%m/%Y') }}</td>
+                <td>{{ t.category.name if t.category else 'Chưa phân loại' }}</td>
+                <td>{{ t.description or '' }}</td>
+                <td>{{ t.wallet.name if t.wallet else '' }}</td>
+                <td style="text-align: right;" class="{{ 'amount-thu' if t.type == 'thu' else 'amount-chi' }}">
+                    {{ "{:,.0f}".format(t.amount) }}
+                </td>
+            </tr>
+            {% endfor %}
+            
+            {% if not transactions %}
+            <tr>
+                <td colspan="5" style="text-align: center; padding: 20px;">Không có dữ liệu giao dịch trong khoảng thời gian này.</td>
+            </tr>
+            {% endif %}
+        </tbody>
+    </table>
+
+    <div class="footer">
+        <p>Ngày xuất báo cáo: {{ today }}</p>
+        <p>(Ký tên)</p>
+    </div>
+
+    <script>
+        window.onload = function() {
+            window.print();
+        }
+    </script>
+</body>
+</html>

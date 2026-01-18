@@ -1,0 +1,84 @@
+{% extends "base.html" %}
+
+{% block title %}Tổng quan - Quản lý Chi tiêu AI{% endblock %}
+
+{% block content %}
+    <header class="main-header">
+        <h1>Chào mừng trở lại, {{ user_name }}!</h1>
+        <p>Đây là bức tranh tài chính của bạn hôm nay.</p>
+    </header>
+    
+    <div class="dashboard-grid">
+        
+        <div class="widget wallet-summary">
+            <h3 class="widget-title">Số dư các ví</h3>
+            <div class="wallet-list">
+                <div class="wallet-item">
+                    <i class="fas fa-money-bill-wave icon-wallet"></i>
+                    <h4>Ví tiền mặt</h4>
+                    <p>0 VND</p>
+                </div>
+                <div class="wallet-item">
+                    <i class="fas fa-credit-card icon-bank"></i>
+                    <h4>Tài khoản</h4>
+                    <p>0 VND</p>
+                </div>
+                <!-- <div class="wallet-item">
+                    <i class="fas fa-mobile-alt icon-momo"></i>
+                    <h4>Ví MoMo</h4>
+                    <p>0 VND</p>
+                </div> -->
+            </div>
+        </div>
+
+        <div class="widget chart-container">
+            <h3 class="widget-title">Tổng quan Thu Chi Tháng 11</h3>
+            <div class="chart-placeholder">
+                [Khu vực này để vẽ Biểu đồ bằng JavaScript]
+            </div>
+        </div>
+
+        <div class="widget budget-progress">
+            <h3 class="widget-title">Tiến độ Ngân sách</h3>
+            <ul>
+                <li class="budget-item">
+                    <div class="budget-info">
+                        <span>Ăn uống</span>
+                        <span></span> </span>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-bar-fill" style="width: 0;"></div>
+                    </div>
+                </li>
+                <li class="budget-item">
+                    <div class="budget-info">
+                        <span>Mua sắm</span>
+                        <span></span>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-bar-fill" style="width: 0%;"></div>
+                    </div>
+                </li>
+                <li class="budget-item">
+                    <div class="budget-info">
+                        <span>Giải trí</span>
+                        <span></span>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-bar-fill exceeded" style="width: 0%;"></div>
+                    </div>
+                </li>
+            </ul>
+        </div>
+
+        <div class="widget ai-suggestions">
+            <h3 class="widget-title">Gợi ý nhanh từ AI</h3>
+            <ul class="suggestion-list">
+                <li></li>
+                <li></li>
+                <li></li>
+            </ul>
+        </div>
+
+    </div>
+{% endblock %}

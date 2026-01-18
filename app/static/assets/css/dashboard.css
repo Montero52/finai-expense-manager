@@ -1,0 +1,1516 @@
+/* ================================================================
+   DASHBOARD.CSS - QUẢN LÝ TÀI CHÍNH CÁ NHÂN
+   ================================================================ */
+
+/* ======== MỤC LỤC ======== 
+   1. CƠ SỞ & THIẾT LẬP CHUNG
+   2. SIDEBAR - THANH ĐIỀU HƯỚNG
+   3. NỘI DUNG CHÍNH
+   4. DASHBOARD - TRANG CHỦ
+   5. GIAO DỊCH (TRANSACTIONS)
+   6. NGÂN SÁCH (BUDGETS)
+   7. BÁO CÁO (REPORTS)
+   8. CÀI ĐẶT (SETTINGS)
+   9. NỀN TẢNG (FOUNDATIONS)
+   10. CHATBOT AI
+   11. RESPONSIVE
+========================== */
+
+
+/* ================================================================
+   1. CƠ SỞ & THIẾT LẬP CHUNG
+   ================================================================ */
+
+body, html {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    background-color: #f0f2f5;
+    color: #333;
+}
+
+body {
+    display: flex;
+}
+
+/* --- Nút & Biểu mẫu chung --- */
+.btn {
+    padding: 0.6rem 1.2rem;
+    border: none;
+    border-radius: 5px;
+    font-size: 0.95rem;
+    font-weight: 500;
+    font-family: 'Poppins', sans-serif;
+    cursor: pointer;
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.btn-primary {
+    background-color: #007bff;
+    color: white;
+}
+
+.btn-primary:hover {
+    background-color: #0056b3;
+}
+
+.btn-secondary {
+    background-color: #f0f0f0;
+    color: #555;
+    border: 1px solid #ddd;
+}
+
+.btn-secondary:hover {
+    background-color: #e0e0e0;
+}
+
+.btn-danger {
+    background-color: #e74c3c;
+    color: white;
+}
+
+.btn-danger:hover {
+    background-color: #c0392b;
+}
+
+.btn .fas {
+    margin-right: 6px;
+}
+
+/* --- Form Group chung --- */
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+}
+
+.form-group label {
+    font-weight: 500;
+    color: #555;
+}
+
+.form-group input[type="text"],
+.form-group input[type="number"],
+.form-group input[type="date"],
+.form-group select {
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 1rem;
+    font-family: 'Poppins', sans-serif;
+    background-color: #fff;
+    box-sizing: border-box;
+    transition: border-color 0.3s;
+}
+
+.form-group input:focus,
+.form-group select:focus {
+    border-color: #007bff;
+    outline: none;
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.2);
+}
+
+.form-group.hidden {
+    display: none;
+}
+
+/* --- Widget cơ bản --- */
+.widget {
+    background-color: #ffffff;
+    padding: 1.5rem;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+.widget-title {
+    margin-top: 0;
+    margin-bottom: 1.5rem;
+    font-weight: 600;
+    font-size: 1.2rem;
+}
+
+/* --- HR Phân cách --- */
+hr {
+    border: 0;
+    height: 1px;
+    background-color: #f0f0f0;
+    margin: 2rem 0;
+}
+
+
+/* ================================================================
+   2. SIDEBAR - THANH ĐIỀU HƯỚNG
+   ================================================================ */
+
+.sidebar {
+    width: 260px;
+    background-color: #2c3e50;
+    color: #ecf0f1;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    position: fixed;
+    left: 0;
+    top: 0;
+}
+
+/* --- Header --- */
+.sidebar-header {
+    padding: 1.5rem 1.25rem;
+    text-align: center;
+    border-bottom: 1px solid #34495e;
+}
+
+.sidebar-header h3 {
+    margin: 0;
+    font-size: 1.5rem;
+}
+
+.sidebar-header h3 i {
+    margin-right: 10px;
+}
+
+/* --- Navigation --- */
+.sidebar-nav {
+    flex-grow: 1;
+}
+
+.sidebar-nav li a {
+    display: flex;
+    align-items: center;
+    padding: 0.85rem 1.5rem;
+    color: #ecf0f1;
+    text-decoration: none;
+    font-size: 1rem;
+    font-weight: 500;
+    transition: background-color 0.3s ease;
+    border-left: 4px solid transparent;
+}
+
+.sidebar-nav li a:hover {
+    background-color: #34495e;
+}
+
+.sidebar-nav li a.active {
+    background-color: #007bff;
+    font-weight: 600;
+    color: #fff;
+}
+
+/* --- Footer --- */
+.sidebar-footer {
+    padding: 1.5rem;
+    border-top: 1px solid #34495e;
+    margin-top: auto;
+}
+
+.sidebar-footer a {
+    display: flex;
+    align-items: center;
+    color: #bdc3c7;
+    text-decoration: none;
+    font-size: 1rem;
+    font-weight: 500;
+    transition: color 0.3s ease;
+}
+
+.sidebar-footer a:hover {
+    color: #3498db;
+}
+
+.sidebar-footer a i {
+    width: 30px;
+    font-size: 1.1rem;
+    margin-right: 10px;
+}
+
+
+/* ================================================================
+   3. NỘI DUNG CHÍNH
+   ================================================================ */
+
+.main-content {
+    flex-grow: 1;
+    margin-left: 260px;
+    padding: 2rem;
+    height: 100vh;
+    overflow-y: auto;
+    box-sizing: border-box;
+}
+
+/* --- Header --- */
+.main-header {
+    margin-bottom: 2rem;
+}
+
+.main-header h1 {
+    margin: 0;
+    font-size: 2.2rem;
+    font-weight: 600;
+}
+
+.main-header p {
+    margin: 0;
+    font-size: 1.1rem;
+    color: #777;
+}
+
+.main-header.with-button {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.header-buttons {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+
+/* ================================================================
+   4. DASHBOARD - TRANG CHỦ
+   ================================================================ */
+
+.dashboard-grid {
+    display: grid;
+    grid-template-columns: 1.5fr 1fr 1fr;
+    grid-template-rows: auto auto;
+    grid-template-areas: 
+        "chart wallet wallet"
+        "chart budget ai";
+    gap: 1.5rem;
+}
+
+.chart-container { grid-area: chart; }
+.wallet-summary { grid-area: wallet; }
+.budget-progress { grid-area: budget; }
+.ai-suggestions { grid-area: ai; }
+
+/* --- Wallet Summary --- */
+.wallet-list {
+    display: flex;
+    gap: 1rem;
+}
+
+.wallet-item {
+    flex: 1;
+    padding: 1rem;
+    border: 1px solid #eee;
+    border-radius: 8px;
+    text-align: center;
+}
+
+.wallet-item h4 {
+    margin: 0.5rem 0;
+    font-weight: 500;
+}
+
+.wallet-item p {
+    margin: 0;
+    font-size: 1.3rem;
+    font-weight: 600;
+    color: #007bff;
+}
+
+.wallet-item i {
+    font-size: 2rem;
+    padding: 10px;
+    border-radius: 50%;
+    color: #fff;
+}
+
+.icon-wallet { background-color: #2ecc71; }
+.icon-bank { background-color: #3498db; }
+.icon-momo { background-color: #e74c3c; }
+
+/* --- Chart --- */
+.chart-placeholder {
+    height: 400px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background-color: #f9f9f9;
+    border: 2px dashed #ddd;
+    border-radius: 8px;
+    color: #aaa;
+    font-weight: 500;
+}
+
+.chart-placeholder i {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+    color: #ccc;
+}
+
+.chart-placeholder.large {
+    min-height: 350px;
+}
+
+/* --- Budget Progress --- */
+.budget-progress ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.budget-item {
+    margin-bottom: 1.25rem;
+}
+
+.budget-info {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 0.5rem;
+    font-weight: 500;
+}
+
+.budget-info i {
+    margin-right: 8px;
+    color: #555;
+}
+
+.budget-amount {
+    font-weight: 600;
+    color: #555;
+}
+
+.progress-bar {
+    width: 100%;
+    height: 12px;
+    background-color: #e9ecef;
+    border-radius: 6px;
+    overflow: hidden;
+}
+
+.progress-bar-fill {
+    height: 100%;
+    background-color: #007bff;
+    border-radius: 6px;
+    transition: width 0.5s ease;
+}
+
+.progress-bar-fill.exceeded {
+    background-color: #e74c3c;
+}
+
+/* --- AI Suggestions --- */
+.suggestion-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.suggestion-list li {
+    padding: 0.75rem 0;
+    border-bottom: 1px solid #f0f0f0;
+    color: #555;
+    line-height: 1.5;
+}
+
+.suggestion-list li:last-child {
+    border-bottom: none;
+}
+
+.suggestion-list li i {
+    margin-right: 10px;
+    color: #f39c12;
+}
+
+/* --- Filters --- */
+.search-box {
+    border: 1px solid #ccc;
+    border-radius: 20px;
+    padding: 5px 15px;
+    display: flex;
+    align-items: center;
+    background: #fff;
+    width: 250px;
+}
+
+.filter-input {
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-family: inherit;
+    font-size: 0.9rem;
+    outline: none;
+}
+
+.filter-input:focus {
+    border-color: var(--primary-color);
+}
+/* ================================================================
+   5. GIAO DỊCH (TRANSACTIONS)
+   ================================================================ */
+
+/* --- Form Tabs --- */
+.transaction-form-card {
+    padding: 0;
+}
+
+.form-tabs {
+    display: flex;
+    border-bottom: 1px solid #eee;
+}
+
+.tab-button {
+    flex: 1;
+    padding: 1rem;
+    border: none;
+    background-color: #f9f9f9;
+    cursor: pointer;
+    font-size: 1rem;
+    font-weight: 500;
+    color: #555;
+    font-family: 'Poppins', sans-serif;
+    transition: background-color 0.3s, color 0.3s, border-bottom 0.3s;
+    border-bottom: 3px solid transparent;
+}
+
+.tab-button:hover {
+    background-color: #f0f0f0;
+}
+
+.tab-button .fas {
+    margin-right: 8px;
+}
+
+.tab-button.active {
+    background-color: #ffffff;
+    font-weight: 600;
+}
+
+#tab-expense.active {
+    color: #e74c3c;
+    border-bottom-color: #e74c3c;
+}
+
+#tab-income.active {
+    color: #2ecc71;
+    border-bottom-color: #2ecc71;
+}
+
+#tab-transfer.active {
+    color: #3498db;
+    border-bottom-color: #3498db;
+}
+
+/* --- Transaction Form --- */
+#transaction-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+    padding: 1.5rem;
+}
+
+.category-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.category-wrapper select {
+    flex-grow: 1;
+}
+
+.category-wrapper #ai-loading-icon {
+    position: absolute;
+    right: 12px;
+    color: #007bff;
+    animation: spin 1.5s linear infinite;
+}
+
+.btn-submit {
+    width: 100%;
+    padding: 0.8rem;
+    font-size: 1.1rem;
+}
+
+/* --- Transaction List --- */
+.transaction-list-card {
+    padding: 0;
+}
+
+.list-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.5rem;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.list-header h2 {
+    margin: 0;
+    font-size: 1.2rem;
+    font-weight: 600;
+}
+
+.search-bar {
+    padding: 0.5rem 0.75rem;
+    border: 1px solid #ccc;
+    border-radius: 20px;
+    font-size: 0.9rem;
+    font-family: 'Poppins', sans-serif;
+}
+
+.transaction-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    padding-bottom: 200px;
+}
+
+.transaction-item {
+    display: flex;
+    align-items: center;
+    padding: 1rem 1.5rem;
+    padding-right: 3rem;
+    border-bottom: 1px solid #f0f0f0;
+    transition: background-color 0.3s;
+    position: relative;
+}
+
+.transaction-item:last-child {
+    border-bottom: none;
+}
+
+.transaction-item:hover {
+    background-color: #f9f9f9;
+}
+
+.item-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    font-size: 1.1rem;
+    margin-right: 1rem;
+    flex-shrink: 0;
+}
+
+.item-info {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+}
+
+.item-description {
+    font-weight: 500;
+    color: #333;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.item-category {
+    font-size: 0.9rem;
+    color: #777;
+}
+
+.item-amount {
+    font-weight: 600;
+    font-size: 1rem;
+    margin-left: auto;
+    white-space: nowrap;
+}
+
+.amount-expense { color: #e74c3c; }
+.amount-income { color: #2ecc71; }
+.amount-transfer { color: #3498db; }
+
+/* --- Action Buttons --- */
+.action-buttons {
+    margin-left: 15px;
+    display: flex;
+    gap: 10px;
+}
+
+.btn-action {
+    background: none;
+    border: none;
+    padding: 5px;
+    cursor: pointer;
+    font-size: 1.1rem;
+    transition: all 0.2s ease;
+    color: #777;
+}
+
+.btn-edit:hover {
+    color: #007bff;
+    transform: scale(1.2);
+}
+
+.btn-delete:hover {
+    color: #e74c3c;
+    transform: scale(1.2);
+}
+
+.btn-delete-icon {
+    background: #fff0f0;
+    border: 1px solid #ffcccc;
+    color: #e74c3c;
+    cursor: pointer;
+    margin-left: 15px;
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+    flex-shrink: 0;
+}
+
+.btn-delete-icon:hover {
+    background-color: #e74c3c;
+    color: white;
+    transform: scale(1.1);
+}
+
+
+/* ================================================================
+   6. NGÂN SÁCH (BUDGETS)
+   ================================================================ */
+
+/* --- Budget Grid --- */
+.budget-list-container {
+    margin-top: 2rem;
+}
+
+.budget-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 1.5rem;
+}
+
+/* --- Budget Card --- */
+.budget-card {
+    background: #fff;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    display: flex;
+    flex-direction: column;
+}
+
+.budget-card-header,
+.budget-card-body,
+.budget-card-footer {
+    padding: 1rem 1.25rem;
+}
+
+.budget-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.budget-card-header h3 {
+    margin: 0;
+    font-size: 1.15rem;
+    font-weight: 600;
+}
+
+.budget-card-header h3 i {
+    margin-right: 8px;
+    color: #555;
+}
+
+.btn-icon {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 1rem;
+    color: #777;
+    padding: 5px;
+    transition: all 0.2s ease;
+}
+
+.btn-icon:hover {
+    color: #007bff;
+    transform: scale(1.2);
+}
+
+.btn-icon.btn-delete:hover {
+    color: #e74c3c;
+}
+
+.budget-card-body p {
+    margin: 0;
+}
+
+.budget-card-amount {
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin-bottom: 0.75rem;
+}
+
+.budget-card-amount.exceeded {
+    color: #e74c3c;
+}
+
+.budget-card-timeleft {
+    font-size: 0.9rem;
+    color: #777;
+    margin-top: 0.75rem;
+}
+
+.budget-card-footer {
+    background: #f9f9f9;
+    border-top: 1px solid #f0f0f0;
+    border-radius: 0 0 10px 10px;
+}
+
+.budget-card-footer > span {
+    font-size: 0.85rem;
+    font-weight: 500;
+    margin-right: 5px;
+}
+
+.tag {
+    display: inline-block;
+    background: #e0e0e0;
+    color: #555;
+    font-size: 0.8rem;
+    padding: 3px 8px;
+    border-radius: 12px;
+    margin: 2px;
+}
+
+
+/* ================================================================
+   7. BÁO CÁO (REPORTS)
+   ================================================================ */
+
+/* --- Filters --- */
+.report-filters {
+    display: flex;
+    gap: 1.5rem;
+    margin-bottom: 1.5rem;
+    flex-wrap: wrap;
+}
+
+.report-filters .form-group {
+    margin-bottom: 0;
+    flex: 1;
+    min-width: 180px;
+}
+
+.report-filters .form-group label {
+    font-size: 0.9rem;
+    font-weight: 500;
+}
+
+.form-group select {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    background-image: url('data:image/svg+xml;utf8,<svg fill="black" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5z"/></svg>');
+    background-repeat: no-repeat;
+    background-position: right 0.75rem center;
+    background-size: 1.5em;
+    padding-right: 2.5rem;
+}
+
+/* --- Report Grid --- */
+.report-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+}
+
+.widget.report-full-width {
+    grid-column: 1 / -1;
+}
+
+/* --- Data Table --- */
+.data-table-widget {
+    grid-column: 1 / -1;
+}
+
+.data-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.data-table th,
+.data-table td {
+    padding: 1rem;
+    text-align: left;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.data-table th {
+    background-color: #f9f9f9;
+    font-weight: 600;
+}
+
+.data-table td i {
+    margin-right: 10px;
+    color: #555;
+    width: 20px;
+    text-align: center;
+}
+
+.progress-bar-table {
+    width: 100%;
+    height: 10px;
+    background-color: #e9ecef;
+    border-radius: 5px;
+    overflow: hidden;
+}
+
+.progress-bar-table .progress-bar-fill {
+    height: 100%;
+    background-color: #007bff;
+    border-radius: 5px;
+}
+
+
+/* ================================================================
+   8. CÀI ĐẶT (SETTINGS)
+   ================================================================ */
+
+.settings-container {
+    display: flex;
+    gap: 1.5rem;
+    margin-top: 1.5rem;
+}
+
+/* --- Navigation --- */
+.settings-nav {
+    display: flex;
+    flex-direction: column;
+    width: 200px;
+    flex-shrink: 0;
+}
+
+.settings-nav-link {
+    display: flex;
+    align-items: center;
+    padding: 0.85rem 1rem;
+    border-radius: 8px;
+    text-decoration: none;
+    color: #333;
+    font-weight: 500;
+    margin-bottom: 0.5rem;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.settings-nav-link i {
+    width: 30px;
+    text-align: center;
+    margin-right: 8px;
+    color: #777;
+    transition: color 0.3s ease;
+}
+
+.settings-nav-link:hover {
+    background-color: #f0f2f5;
+}
+
+.settings-nav-link.active {
+    background-color: #007bff;
+    color: #fff;
+    font-weight: 600;
+}
+
+.settings-nav-link.active i {
+    color: #fff;
+}
+
+/* --- Content --- */
+.settings-content {
+    flex-grow: 1;
+    background: #fff;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    padding: 0.5rem 2rem 2rem 2rem;
+}
+
+.tab-panel {
+    display: none;
+}
+
+.tab-panel.active {
+    display: block;
+}
+
+.tab-panel h2 {
+    font-size: 1.8rem;
+    font-weight: 600;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.form-section {
+    margin-bottom: 1.5rem;
+    padding-bottom: 1.5rem;
+}
+
+.form-section h3 {
+    font-size: 1.3rem;
+    margin-top: 0;
+    margin-bottom: 1rem;
+}
+
+.form-section .form-group {
+    max-width: 500px;
+}
+
+/* --- Toggle Switch --- */
+.toggle-switch-container {
+    display: flex;
+    align-items: center;
+}
+
+.toggle-label {
+    margin-left: 12px;
+    font-weight: 500;
+    cursor: pointer;
+}
+
+.toggle-switch {
+    position: relative;
+    display: inline-block;
+    width: 60px;
+    height: 34px;
+}
+
+.toggle-switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    transition: .4s;
+}
+
+.slider:before {
+    position: absolute;
+    content: "";
+    height: 26px;
+    width: 26px;
+    left: 4px;
+    bottom: 4px;
+    background-color: white;
+    transition: .4s;
+}
+
+.slider.round {
+    border-radius: 34px;
+}
+
+.slider.round:before {
+    border-radius: 50%;
+}
+
+input:checked + .slider {
+    background-color: #007bff;
+}
+
+input:focus + .slider {
+    box-shadow: 0 0 1px #007bff;
+}
+
+input:checked + .slider:before {
+    transform: translateX(26px);
+}
+
+
+/* ================================================================
+   9. NỀN TẢNG (FOUNDATIONS)
+   ================================================================ */
+
+/* --- Tabs --- */
+.settings-tabs {
+    display: flex;
+    border-bottom: 2px solid #ddd;
+    margin-bottom: 1.5rem;
+}
+
+.tab-link {
+    padding: 0.8rem 1.5rem;
+    cursor: pointer;
+    text-decoration: none;
+    color: #555;
+    font-weight: 500;
+    font-size: 1rem;
+    border-bottom: 2px solid transparent;
+    margin-bottom: -2px;
+    transition: color 0.3s ease;
+}
+
+.tab-link i {
+    margin-right: 8px;
+}
+
+.tab-link:hover {
+    color: #000;
+}
+
+.tab-link.active {
+    color: #007bff;
+    font-weight: 600;
+    border-bottom-color: #007bff;
+}
+
+/* --- Content Wrapper --- */
+.settings-content-wrapper {
+    background: #fff;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    padding: 1.5rem 2rem;
+}
+
+.panel-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.panel-header h2 {
+    margin: 0;
+    font-size: 1.5rem;
+}
+
+/* --- CRUD Table --- */
+.crud-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.crud-table th,
+.crud-table td {
+    padding: 0.85rem 1rem;
+    text-align: left;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.crud-table th {
+    background-color: #f9f9f9;
+    font-weight: 600;
+    font-size: 0.9rem;
+    color: #555;
+}
+
+.crud-table td {
+    font-size: 0.95rem;
+}
+
+.crud-table th:last-child,
+.crud-table td:last-child {
+    text-align: right;
+}
+
+.tag-thu {
+    background-color: #e6f7ec;
+    color: #28a745;
+    font-weight: 600;
+    padding: 3px 8px;
+    border-radius: 5px;
+    font-size: 0.85rem;
+}
+
+.tag-chi {
+    background-color: #fbebee;
+    color: #e74c3c;
+    font-weight: 600;
+    padding: 3px 8px;
+    border-radius: 5px;
+    font-size: 0.85rem;
+}
+
+
+/* ================================================================
+   10. MODAL (POPUP)
+   ================================================================ */
+
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.5);
+    justify-content: center;
+    align-items: center;
+}
+
+.modal-content {
+    background-color: #fff;
+    border-radius: 10px;
+    width: 90%;
+    max-width: 600px;
+    max-height: 90vh;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    display: flex;
+    flex-direction: column;
+    animation: slide-down 0.3s ease-out;
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 1.5rem;
+    border-bottom: 1px solid #e0e0e0;
+
+}
+
+.modal-header h2 {
+    margin: 0;
+    font-size: 1.5rem;
+}
+
+.modal-close {
+    font-size: 2rem;
+    font-weight: bold;
+    color: #aaa;
+    cursor: pointer;
+}
+
+.modal-close:hover {
+    color: #333;
+}
+
+.modal-body {
+    padding: 1.5rem;
+    overflow-y: auto;
+    flex-grow: 1;
+}
+
+.modal-footer {
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.75rem;
+    padding: 1rem 1.5rem;
+    border-top: 1px solid #e0e0e0;
+}
+
+/* --- Category Select List (Trong Modal) --- */
+.category-select-list {
+    max-height: 200px;
+    overflow-y: auto;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    padding: 0.5rem;
+}
+
+.category-select-list label {
+    display: block;
+    padding: 0.5rem 0.75rem;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.category-select-list label:hover {
+    background-color: #f0f2f5;
+}
+
+.category-select-list label input {
+    margin-right: 10px;
+}
+
+@keyframes slide-down {
+    from {
+        transform: translateY(-50px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+
+/* ================================================================
+   10. CHATBOT AI
+   ================================================================ */
+
+.chatbot-container {
+    position: fixed;
+    bottom: 2rem;
+    right: 2rem;
+    z-index: 1100;
+}
+
+/* --- Floating Button (FAB) --- */
+.chat-fab {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    cursor: pointer;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1.8rem;
+    transition: transform 0.2s ease;
+}
+
+.chat-fab:hover {
+    transform: scale(1.1);
+}
+
+/* --- Chat Window --- */
+.chat-window {
+    display: none;
+    flex-direction: column;
+    position: absolute;
+    bottom: 80px;
+    right: 0;
+    width: 350px;
+    height: 500px;
+    max-height: 80vh;
+    background: #fff;
+    border-radius: 10px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    overflow: hidden;
+    animation: slide-up 0.3s ease-out;
+}
+
+@keyframes slide-up {
+    from {
+        transform: translateY(30px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+.chat-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.75rem 1rem;
+    background-color: #007bff;
+    color: white;
+}
+
+.chat-header h4 {
+    margin: 0;
+    font-size: 1.1rem;
+    font-weight: 600;
+}
+
+.chat-header h4 i {
+    margin-right: 8px;
+}
+
+.chat-close {
+    font-size: 1.8rem;
+    font-weight: bold;
+    color: white;
+    cursor: pointer;
+    opacity: 0.8;
+}
+
+.chat-close:hover {
+    opacity: 1;
+}
+
+.chat-body {
+    flex-grow: 1;
+    padding: 1rem;
+    overflow-y: auto;
+    background-color: #f9f9f9;
+}
+
+.chat-message {
+    margin-bottom: 0.75rem;
+    display: flex;
+    flex-direction: column;
+}
+
+.chat-message p {
+    margin: 0;
+    padding: 0.6rem 0.9rem;
+    border-radius: 18px;
+    line-height: 1.5;
+    max-width: 85%;
+    display: inline-block;
+}
+
+/* Tin nhắn AI */
+.chat-message.ai p {
+    background-color: #e9ecef;
+    color: #333;
+    border-bottom-left-radius: 5px;
+    align-self: flex-start;
+}
+
+/* Tin nhắn User */
+.chat-message.user {
+    align-items: flex-end;
+}
+
+.chat-message.user p {
+    background-color: #007bff;
+    color: white;
+    border-bottom-right-radius: 5px;
+}
+
+.chat-input {
+    display: flex;
+    border-top: 1px solid #ddd;
+    padding: 0.5rem;
+    background: #fff;
+}
+
+.chat-input input {
+    flex-grow: 1;
+    border: none;
+    padding: 0.75rem;
+    font-size: 1rem;
+    font-family: 'Poppins', sans-serif;
+    outline: none;
+}
+
+.chat-input button {
+    background: none;
+    border: none;
+    padding: 0 1rem;
+    font-size: 1.2rem;
+    color: #007bff;
+    cursor: pointer;
+}
+
+.chat-input button:hover {
+    color: #0056b3;
+}
+
+
+/* ================================================================
+   11. RESPONSIVE (MOBILE & TABLET)
+   ================================================================ */
+
+/* --- Tablet & Màn hình nhỏ (< 1200px) --- */
+@media (max-width: 1200px) {
+    .dashboard-grid {
+        grid-template-columns: 1fr 1fr;
+        grid-template-areas: 
+            "chart chart"
+            "wallet wallet"
+            "budget ai";
+    }
+    
+    .report-grid {
+        grid-template-columns: 1fr; /* Báo cáo thành 1 cột */
+    }
+}
+
+/* --- Mobile (< 768px) --- */
+@media (max-width: 768px) {
+    body {
+        flex-direction: column; /* Sidebar lên trên hoặc ẩn */
+    }
+
+    /* Sidebar trên Mobile (Ẩn hoặc Stack) */
+    .sidebar {
+        width: 100%;
+        height: auto;
+        position: static;
+        padding-bottom: 10px;
+    }
+
+    .sidebar-nav {
+        display: none; /* Tạm ẩn menu, cần JS để toggle */
+    }
+    
+    /* Main Content giãn full màn hình */
+    .main-content {
+        margin-left: 0;
+        padding: 1rem;
+        width: 100%;
+    }
+
+    /* Dashboard 1 cột dọc */
+    .dashboard-grid {
+        grid-template-columns: 1fr;
+        grid-template-areas: 
+            "wallet"
+            "chart"
+            "budget"
+            "ai";
+    }
+
+    .wallet-list {
+        flex-direction: column; /* Ví xếp dọc */
+    }
+
+    /* Transaction Form */
+    .form-tabs {
+        flex-wrap: wrap;
+    }
+    
+    .tab-button {
+        padding: 0.8rem;
+        font-size: 0.9rem;
+    }
+
+    /* Bảng biểu có thanh cuộn ngang */
+    .crud-table, .user-table, .category-table {
+        display: block;
+        overflow-x: auto;
+        white-space: nowrap;
+    }
+
+    /* Chatbot thu nhỏ */
+    .chat-window {
+        width: 90%;
+        right: 5%;
+        bottom: 90px;
+    }
+}
+
+/* --- Thanh Tỷ trọng (Progress Bar) trong Bảng --- */
+.progress {
+    width: 100%;
+    height: 10px;
+    background-color: #e9ecef; /* Màu nền xám nhạt */
+    border-radius: 5px;
+    overflow: hidden; /* Để bo góc cho thanh con bên trong */
+    margin-bottom: 5px;
+}
+
+.progress-bar {
+    height: 100%;
+    background-color: var(--primary-color); /* Màu xanh chủ đạo */
+    border-radius: 5px;
+    transition: width 0.6s ease; /* Hiệu ứng chạy mượt mà */
+}
+
+/* Nếu muốn đổi màu dựa trên mức độ (Ví dụ > 80% thì màu đỏ) - Tùy chọn */
+.progress-bar.high {
+    background-color: var(--danger-color);
+}

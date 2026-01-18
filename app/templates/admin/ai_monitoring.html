@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+
+{% block title %}Giám sát AI - Admin Panel{% endblock %}
+
+{% block css %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='assets/css/admin.css') }}">
+{% endblock %}
+
+{% block content %}
+    <header class="main-header">
+        <h1>Giám sát AI</h1>
+        <p>Đánh giá hiệu quả và độ chính xác của mô hình.</p>
+    </header>
+
+    <div class="widget">
+        
+        <div class="filter-bar" style="display: flex; justify-content: flex-end; align-items: center; margin-bottom: 20px;">
+            <label for="result-filter" style="margin-right: 10px; font-weight: 500; color: #555;">Hiển thị:</label>
+            <select id="result-filter" style="padding: 8px 12px; border-radius: 5px; border: 1px solid #ccc; outline: none; min-width: 150px;">
+                <option value="all">Tất cả kết quả</option>
+                <option value="incorrect">Chỉ xem dự đoán SAI</option>
+                <option value="correct">Chỉ xem dự đoán ĐÚNG</option>
+            </select>
+        </div>
+
+        <table class="ai-log-table">
+            <thead>
+                <tr>
+                    <th>Mô tả (Input)</th>
+                    <th>AI Đoán</th>
+                    <th>Người dùng Chọn</th>
+                    <th>Kết quả</th>
+                    <th>Thời gian</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr class="log-correct">
+                    <td>Cà phê Highland</td>
+                    <td class="col-ai-guess">Ăn uống</td>
+                    <td class="col-user-choice">Ăn uống</td>
+                    <td><span class="result-badge result-correct"><i class="fas fa-check"></i> Đúng</span></td>
+                    <td>14/11/2025 15:30</td>
+                </tr>
+                <tr class="log-incorrect">
+                    <td>Grab về nhà</td>
+                    <td class="col-ai-guess">Mua sắm</td>
+                    <td class="col-user-choice">Đi lại</td>
+                    <td><span class="result-badge result-incorrect"><i class="fas fa-times"></i> Sai</span></td>
+                    <td>14/11/2025 12:15</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+{% endblock %}

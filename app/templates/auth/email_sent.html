@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Đã gửi Email - Quản lý Chi tiêu AI</title>
+    
+    <link rel="stylesheet" href="{{ url_for('static', filename='assets/css/style.css') }}">
+
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+    
+    <style>
+        .confirmation-text {
+            text-align: center;
+            font-size: 1rem;
+            color: #555;
+            line-height: 1.6;
+        }
+        .confirmation-text strong {
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        
+        <h2>Đã gửi link</h2>
+
+        <div class="confirmation-text">
+            <p>Chúng tôi đã gửi một link khôi phục mật khẩu đến email của bạn.</p>
+            <p>Vui lòng kiểm tra <strong>Hộp thư đến</strong> (và cả thư mục Spam) của bạn.</p>
+        </div>
+        
+        <div class="register-link" style="margin-top: 2rem;">
+            <a href="{{ url_for('login') }}">Quay lại Đăng nhập</a>
+        </div>
+    </div>
+    
+</body>
+</html>

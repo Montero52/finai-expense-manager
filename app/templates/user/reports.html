@@ -1,0 +1,91 @@
+{% extends "base.html" %}
+
+{% block title %}Báo cáo - Quản lý Chi tiêu AI{% endblock %}
+
+{% block content %}
+    <header class="main-header with-button"> 
+        <div> 
+            <h1>Báo cáo & Phân tích</h1>
+            <p>Phân tích chi tiêu của bạn qua các biểu đồ trực quan.</p>
+        </div>
+        <div class="header-buttons">
+            <button class="btn btn-secondary" onclick="exportFile('excel')">
+                <i class="fas fa-file-excel"></i> Xuất Excel
+            </button>
+            <button class="btn btn-primary" onclick="exportFile('pdf')">
+                <i class="fas fa-file-pdf"></i> Xuất PDF
+            </button>
+        </div>
+    </header>
+    
+    <div class="report-filters widget">
+        <div class="form-group">
+            <label for="timeFilter">Thời gian</label>
+            <select id="timeFilter" class="form-control">
+                <option value="this_month">Tháng này</option>
+                <option value="last_month">Tháng trước</option>
+                <option value="year">Năm nay</option> 
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="walletFilter">Nguồn tiền</label>
+            <select id="walletFilter" class="form-control">
+                <option value="all">Tất cả Nguồn tiền</option>
+                </select>
+        </div>
+        <div class="form-group">
+            <label for="typeFilter">Loại Giao dịch</label>
+            <select id="typeFilter" class="form-control">
+                <option value="expense">Chỉ Chi tiêu</option>
+                <option value="income">Chỉ Thu nhập</option>
+            </select>
+        </div>
+    </div>
+
+    <div class="report-grid">
+        <div class="widget">
+            <h3 class="widget-title">Chi tiêu theo Danh mục</h3>
+            <div style="position: relative; height: 300px; width: 100%;">
+                <canvas id="pieChart"></canvas>
+            </div>
+        </div>
+
+        <div class="widget">
+            <h3 class="widget-title">Dòng tiền (Thu vs. Chi)</h3>
+            <div style="position: relative; height: 300px; width: 100%;">
+                <canvas id="barChart"></canvas>
+            </div>
+        </div>
+
+        <div class="widget report-full-width">
+            <h3 class="widget-title">Xu hướng chi tiêu hàng ngày</h3>
+            <div style="position: relative; height: 350px; width: 100%;">
+                <canvas id="lineChart"></canvas>
+            </div>
+        </div>
+
+        <div class="widget data-table-widget">
+            <h3 class="widget-title">Chi tiêu nhiều nhất theo Danh mục</h3>
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Danh mục</th>
+                        <th>Số tiền</th>
+                        <th style="width: 40%;">Tỷ trọng</th>
+                    </tr>
+                </thead>
+                <tbody id="topSpendingBody">
+                    <tr>
+                        <td colspan="3" class="text-center">Đang tải dữ liệu...</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+{% endblock %}
+
+{% block scripts %}
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <script src="{{ url_for('static', filename='assets/js/reports.js') }}"></script>
+{% endblock %}

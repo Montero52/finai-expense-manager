@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+
+{% block title %}Lịch sử Chatbot - Admin Panel{% endblock %}
+
+{% block css %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='assets/css/admin.css') }}">
+{% endblock %}
+
+{% block content %}
+    <header class="main-header">
+        <h1>Lịch sử Chatbot</h1>
+        <p>Xem lại các cuộc hội thoại của người dùng.</p>
+    </header>
+
+    <div class="widget" style="padding: 0; overflow: hidden; display: flex; flex-direction: column;">
+        <div class="chat-log-wrapper" style="border: none; border-radius: 0; height: 650px;">
+            
+            <div class="conversation-list">
+                <div class="list-header">Cuộc hội thoại gần đây</div>
+                <ul>
+                    <li class="conversation-item active">
+                        <div class="convo-user">Trần Nhật Quý (ID: 1)</div>
+                        <div class="convo-snippet">Bot: Chi tiêu tháng này của bạn...</div>
+                        <div class="convo-time">10 phút trước</div>
+                    </li>
+                    <li class="conversation-item">
+                        <div class="convo-user">Nguyễn Văn A (ID: 2)</div>
+                        <div class="convo-snippet">User: Cho tôi xem báo cáo...</div>
+                        <div class="convo-time">1 giờ trước</div>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="chat-display">
+                <div class="chat-header" style="border-bottom: 1px solid #eee;">
+                    <strong>Chi tiết hội thoại:</strong> Trần Nhật Quý
+                </div>
+                <div class="chat-body">
+                    <div class="chat-message message-user">
+                        <div class="message-bubble">Chào bot, xem giúp tôi ví tiền mặt.</div>
+                        <div class="message-time">10:28</div>
+                    </div>
+                    <div class="chat-message message-bot">
+                        <div class="message-bubble">Ví tiền mặt của bạn hiện có 5.000.000đ.</div>
+                        <div class="message-time">10:29</div>
+                    </div>
+                </div>
+            </div>
+
+        </div> 
+    </div>
+{% endblock %}
