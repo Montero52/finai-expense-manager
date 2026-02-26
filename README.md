@@ -2,6 +2,13 @@
 
 > **Full-stack Personal Finance App powered by Google Gemini 2.0 & RAG**
 
+![Python](https://img.shields.io/badge/Python-3.11%2B-blue?style=for-the-badge&logo=python&logoColor=white)
+![Flask](https://img.shields.io/badge/Flask-Web_App-000000?style=for-the-badge&logo=flask&logoColor=white)
+![Gemini AI](https://img.shields.io/badge/AI-Gemini_2.0_Flash-8E44AD?style=for-the-badge&logo=google-bard&logoColor=white)
+![Pandas](https://img.shields.io/badge/Data-Pandas-150458?style=for-the-badge&logo=pandas&logoColor=white)
+![SQLAlchemy](https://img.shields.io/badge/ORM-SQLAlchemy-D70206?style=for-the-badge&logo=sqlalchemy&logoColor=white)
+![Bootstrap](https://img.shields.io/badge/Frontend-Bootstrap_5-7952B3?style=for-the-badge&logo=bootstrap&logoColor=white)
+
 ## Introduction
 
 **FinAI** is a smart personal finance management web application designed to simplify expense tracking using Artificial Intelligence. Unlike traditional apps that require tedious manual entry, FinAI integrates **Google Gemini 2.0 Flash** to automatically categorize transactions and provide real-time financial advice via an interactive chatbot.
@@ -28,8 +35,6 @@
 * **Data Export:**
 * Export transaction history to Excel (`.xlsx`) for offline analysis.
 * Generate Print-friendly Reports (HTML/PDF view) for monthly reviews.
-
-
 
 ---
 

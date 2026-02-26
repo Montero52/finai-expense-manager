@@ -11,6 +11,7 @@ ADMIN_NAME = "Quản Trị Viên Hệ Thống"
 def create_admin():
     # Cần chạy trong Application Context của Flask để truy cập được DB
     with app.app_context():
+        db.create_all()
         # 1. Kiểm tra xem admin đã tồn tại chưa
         existing_user = User.query.filter_by(email=ADMIN_EMAIL).first()
         if existing_user:

@@ -1,6 +1,8 @@
 import os
 import google.generativeai as genai
 from dotenv import load_dotenv
+import warnings
+warnings.filterwarnings("ignore", category=FutureWarning)
 
 # Load API Key từ .env
 load_dotenv()
