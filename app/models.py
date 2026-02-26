@@ -104,6 +104,13 @@ class Transaction(db.Model):
 # ==================================================
 # 6. BẢNG NGÂN SÁCH
 # ==================================================
+
+# 7. Bảng Trung gian Ngân sách - Danh mục
+budget_category = db.Table('ngansach_danhmuc',
+    db.Column('MaNganSach', db.String(8), db.ForeignKey('ngansach.MaNganSach', ondelete='CASCADE'), primary_key=True),
+    db.Column('MaDanhMuc', db.String(8), db.ForeignKey('danhmuc.MaDanhMuc', ondelete='CASCADE'), primary_key=True)
+)
+
 class Budget(db.Model):
     __tablename__ = 'ngansach'
 
@@ -116,13 +123,9 @@ class Budget(db.Model):
     created_at = db.Column('NgayTao', db.DateTime, default=datetime.now)
 
     # Quan hệ Many-to-Many với Danh mục
-    categories = db.relationship('Category', secondary='ngansach_danhmuc', backref=db.backref('budgets', lazy=True))
+    categories = db.relationship('Category', secondary=budget_category, backref=db.backref('budgets', lazy=True))
 
-# 7. Bảng Trung gian Ngân sách - Danh mục
-budget_category = db.Table('ngansach_danhmuc',
-    db.Column('MaNganSach', db.String(8), db.ForeignKey('ngansach.MaNganSach', ondelete='CASCADE'), primary_key=True),
-    db.Column('MaDanhMuc', db.String(8), db.ForeignKey('danhmuc.MaDanhMuc', ondelete='CASCADE'), primary_key=True)
-)
+
 
 # ==================================================
 # 8. CÁC BẢNG PHỤ TRỢ KHÁC
