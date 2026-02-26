@@ -12,23 +12,23 @@
     <nav class="sidebar-nav">
         <ul>
             {% if session.get('user_role') == 'admin' %}
-                <li><a href="{{ url_for('users') }}"><span>Quản lý Người dùng</span></a></li>
-                <li><a href="{{ url_for('categories') }}"><span>Quản lý Danh mục</span></a></li>
-                <li><a href="{{ url_for('ai_monitoring') }}"><span>Giám sát AI</span></a></li>
-                <li><a href="{{ url_for('chatbot_logs') }}"><span>Lịch sử Chatbot</span></a></li>
+                <li><a href="{{ url_for('admin.users') }}"><span>Quản lý Người dùng</span></a></li>
+                <li><a href="{{ url_for('admin.categories') }}"><span>Quản lý Danh mục</span></a></li>
+                <li><a href="{{ url_for('admin.ai_monitoring') }}"><span>Giám sát AI</span></a></li>
+                <li><a href="{{ url_for('admin.chatbot_logs') }}"><span>Lịch sử Chatbot</span></a></li>
             {% else %}
-                <li><a href="{{ url_for('dashboard') }}"><span>Tổng quan</span></a></li>
-                <li><a href="{{ url_for('transactions') }}"><span>Giao dịch</span></a></li>
-                <li><a href="{{ url_for('budgets') }}"><span>Ngân sách</span></a></li>
-                <li><a href="{{ url_for('reports') }}"><span>Báo cáo</span></a></li>
-                <li><a href="{{ url_for('foundations') }}"><span>Nền tảng</span></a></li>
-                <li><a href="{{ url_for('settings') }}"><span>Cài đặt</span></a></li>
+                <li><a href="{{ url_for('core.dashboard') }}"><span>Tổng quan</span></a></li>
+                <li><a href="{{ url_for('core.transactions') }}"><span>Giao dịch</span></a></li>
+                <li><a href="{{ url_for('core.budgets') }}"><span>Ngân sách</span></a></li>
+                <li><a href="{{ url_for('report.reports') }}"><span>Báo cáo</span></a></li>
+                <li><a href="{{ url_for('core.foundations') }}"><span>Nền tảng</span></a></li>
+                <li><a href="{{ url_for('core.settings') }}"><span>Cài đặt</span></a></li>
             {% endif %}
         </ul>
     </nav>
     
     <div class="sidebar-footer">
-        <a href="{{ url_for('logout') }}">
+        <a href="{{ url_for('auth.logout') }}">
             <i class="fas fa-sign-out-alt"></i>
             <span>Đăng xuất</span>
         </a>

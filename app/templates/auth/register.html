@@ -25,7 +25,7 @@
         {% endif %}
         {% endwith %}
 
-        <form id="register-form" method="POST" action="{{ url_for('register') }}">
+        <form id="register-form" method="POST" action="{{ url_for('auth.register') }}">
             <div class="input-group">
                 <label for="fullname">Họ và tên</label>
                 <input type="text" id="fullname" name="fullname" placeholder="Nhập họ và tên" required>
@@ -47,7 +47,7 @@
         </form>
         
         <div class="register-link">
-            <p>Đã có tài khoản? <a href="{{ url_for('login') }}">Đăng nhập ngay</a></p>
+            <p>Đã có tài khoản? <a href="{{ url_for('auth.login') }}">Đăng nhập ngay</a></p>
         </div>
     </div>
 </body>
