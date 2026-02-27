@@ -2,6 +2,10 @@
 
 {% block title %}Cài đặt - Quản lý Chi tiêu AI{% endblock %}
 
+{% block extra_css %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='assets/css/components/settings.css') }}">
+{% endblock %}
+
 {% block content %}
     <header class="main-header">
         <h1>Cài đặt</h1>
