@@ -2,6 +2,10 @@
 
 {% block title %}Báo cáo - Quản lý Chi tiêu AI{% endblock %}
 
+{% block extra_css %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='assets/css/components/report.css') }}">
+{% endblock %}
+
 {% block content %}
     <header class="main-header with-button"> 
         <div> 
