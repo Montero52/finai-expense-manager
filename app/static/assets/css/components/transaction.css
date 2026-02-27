@@ -171,3 +171,15 @@
 .amount-expense { color: #e74c3c; }
 .amount-income { color: #2ecc71; }
 .amount-transfer { color: #3498db; }
+
+@media (max-width: 768px) {
+    /* Transaction Form */
+    .form-tabs {
+        flex-wrap: wrap;
+    }
+    
+    .tab-button {
+        padding: 0.8rem;
+        font-size: 0.9rem;
+    }
+}

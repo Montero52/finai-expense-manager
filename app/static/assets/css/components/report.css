@@ -81,3 +81,9 @@
     background-color: #007bff;
     border-radius: 5px;
 }
+
+@media (max-width: 1200px) {
+    .report-grid {
+        grid-template-columns: 1fr; /* Báo cáo thành 1 cột */
+    }
+}

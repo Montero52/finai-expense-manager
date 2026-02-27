@@ -154,3 +154,14 @@
 .chat-input button:hover {
     color: #0056b3;
 }
+
+/* --- Mobile (< 768px) --- */
+@media (max-width: 768px) {
+    
+    /* Chatbot thu nhỏ */
+    .chat-window {
+        width: 90%;
+        right: 5%;
+        bottom: 90px;
+    }
+}

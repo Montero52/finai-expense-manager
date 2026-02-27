@@ -328,3 +328,13 @@ hr {
 .progress-bar.high {
     background-color: var(--danger-color);
 }
+
+@media (max-width: 768px) {
+    
+    /* Bảng biểu có thanh cuộn ngang */
+    .crud-table, .user-table, .category-table {
+        display: block;
+        overflow-x: auto;
+        white-space: nowrap;
+    }
+}

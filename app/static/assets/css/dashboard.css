@@ -192,22 +192,13 @@
             "budget ai";
     }
     
-    .report-grid {
-        grid-template-columns: 1fr; /* Báo cáo thành 1 cột */
-    }
+
 }
 
 /* --- Mobile (< 768px) --- */
 @media (max-width: 768px) {
     body {
         flex-direction: column; /* Sidebar lên trên hoặc ẩn */
-    }
-
-    /* Main Content giãn full màn hình */
-    .main-content {
-        margin-left: 0;
-        padding: 1rem;
-        width: 100%;
     }
 
     /* Dashboard 1 cột dọc */
@@ -224,28 +215,5 @@
         flex-direction: column; /* Ví xếp dọc */
     }
 
-    /* Transaction Form */
-    .form-tabs {
-        flex-wrap: wrap;
-    }
-    
-    .tab-button {
-        padding: 0.8rem;
-        font-size: 0.9rem;
-    }
-
-    /* Bảng biểu có thanh cuộn ngang */
-    .crud-table, .user-table, .category-table {
-        display: block;
-        overflow-x: auto;
-        white-space: nowrap;
-    }
-
-    /* Chatbot thu nhỏ */
-    .chat-window {
-        width: 90%;
-        right: 5%;
-        bottom: 90px;
-    }
 }
 
