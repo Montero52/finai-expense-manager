@@ -2,6 +2,10 @@
 
 {% block title %}Giao dịch - Quản lý Chi tiêu AI{% endblock %}
 
+{% block extra_css %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='assets/css/components/transaction.css') }}?v=1.0">
+{% endblock %}
+
 {% block content %}
     <header class="main-header">
         <h1>Quản lý Giao dịch</h1>
