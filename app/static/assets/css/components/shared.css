@@ -1,0 +1,168 @@
+
+/* --- Nút & Biểu mẫu chung --- */
+.btn {
+    padding: 0.6rem 1.2rem;
+    border: none;
+    border-radius: 5px;
+    font-size: 0.95rem;
+    font-weight: 500;
+    font-family: 'Poppins', sans-serif;
+    cursor: pointer;
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.btn-primary {
+    background-color: #007bff;
+    color: white;
+}
+
+.btn-primary:hover {
+    background-color: #0056b3;
+}
+
+.btn-secondary {
+    background-color: #f0f0f0;
+    color: #555;
+    border: 1px solid #ddd;
+}
+
+.btn-secondary:hover {
+    background-color: #e0e0e0;
+}
+
+.btn-danger {
+    background-color: #e74c3c;
+    color: white;
+}
+
+.btn-danger:hover {
+    background-color: #c0392b;
+}
+
+.btn .fas {
+    margin-right: 6px;
+}
+
+/* --- Form Group chung --- */
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+}
+
+.form-group label {
+    font-weight: 500;
+    color: #555;
+}
+
+.form-group input[type="text"],
+.form-group input[type="number"],
+.form-group input[type="date"],
+.form-group select {
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 1rem;
+    font-family: 'Poppins', sans-serif;
+    background-color: #fff;
+    box-sizing: border-box;
+    transition: border-color 0.3s;
+}
+
+.form-group input:focus,
+.form-group select:focus {
+    border-color: #007bff;
+    outline: none;
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.2);
+}
+
+.form-group.hidden {
+    display: none;
+}
+
+/* --- Widget cơ bản --- */
+.widget {
+    background-color: #ffffff;
+    padding: 1.5rem;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+.widget-title {
+    margin-top: 0;
+    margin-bottom: 1.5rem;
+    font-weight: 600;
+    font-size: 1.2rem;
+}
+
+/* --- HR Phân cách --- */
+hr {
+    border: 0;
+    height: 1px;
+    background-color: #f0f0f0;
+    margin: 2rem 0;
+}
+
+/* --- CRUD Table --- */
+.crud-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.crud-table th,
+.crud-table td {
+    padding: 0.85rem 1rem;
+    text-align: left;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.crud-table th {
+    background-color: #f9f9f9;
+    font-weight: 600;
+    font-size: 0.9rem;
+    color: #555;
+}
+
+.crud-table td {
+    font-size: 0.95rem;
+}
+
+.crud-table th:last-child,
+.crud-table td:last-child {
+    text-align: right;
+}
+
+.tag-thu {
+    background-color: #e6f7ec;
+    color: #28a745;
+    font-weight: 600;
+    padding: 3px 8px;
+    border-radius: 5px;
+    font-size: 0.85rem;
+}
+
+.tag-chi {
+    background-color: #fbebee;
+    color: #e74c3c;
+    font-weight: 600;
+    padding: 3px 8px;
+    border-radius: 5px;
+    font-size: 0.85rem;
+}
+
+/* --- Thanh Tỷ trọng (Progress Bar) trong Bảng --- */
+.progress {
+    width: 100%;
+    height: 10px;
+    background-color: #e9ecef; /* Màu nền xám nhạt */
+    border-radius: 5px;
+    overflow: hidden; /* Để bo góc cho thanh con bên trong */
+    margin-bottom: 5px;
+}
+
+/* Nếu muốn đổi màu dựa trên mức độ (Ví dụ > 80% thì màu đỏ) - Tùy chọn */
+.progress-bar.high {
+    background-color: var(--danger-color);
+}
