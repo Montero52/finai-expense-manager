@@ -80,6 +80,45 @@
     margin-right: 10px;
 }
 
+
+.main-content {
+    flex-grow: 1;
+    margin-left: 260px;
+    padding: 2rem;
+    height: 100vh;
+    overflow-y: auto;
+    box-sizing: border-box;
+}
+
+/* --- Header --- */
+.main-header {
+    margin-bottom: 2rem;
+}
+
+.main-header h1 {
+    margin: 0;
+    font-size: 2.2rem;
+    font-weight: 600;
+}
+
+.main-header p {
+    margin: 0;
+    font-size: 1.1rem;
+    color: #777;
+}
+
+.main-header.with-button {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.header-buttons {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
 @media (max-width: 768px) {
     body {
         flex-direction: column; /* Sidebar lên trên hoặc ẩn */
