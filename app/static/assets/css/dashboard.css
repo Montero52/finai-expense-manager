@@ -21,60 +21,11 @@
    1. CƠ SỞ & THIẾT LẬP CHUNG
    ================================================================ */
 
-body, html {
-    margin: 0;
-    padding: 0;
-    height: 100%;
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-    background-color: #f0f2f5;
-    color: #333;
-}
 
-body {
-    display: flex;
-}
 
 /* ================================================================
    3. NỘI DUNG CHÍNH
    ================================================================ */
-
-.main-content {
-    flex-grow: 1;
-    margin-left: 260px;
-    padding: 2rem;
-    height: 100vh;
-    overflow-y: auto;
-    box-sizing: border-box;
-}
-
-/* --- Header --- */
-.main-header {
-    margin-bottom: 2rem;
-}
-
-.main-header h1 {
-    margin: 0;
-    font-size: 2.2rem;
-    font-weight: 600;
-}
-
-.main-header p {
-    margin: 0;
-    font-size: 1.1rem;
-    color: #777;
-}
-
-.main-header.with-button {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
-.header-buttons {
-    display: flex;
-    align-items: center;
-    gap: 0.75rem;
-}
 
 
 /* ================================================================
@@ -227,29 +178,7 @@ body {
     color: #f39c12;
 }
 
-/* --- Filters --- */
-.search-box {
-    border: 1px solid #ccc;
-    border-radius: 20px;
-    padding: 5px 15px;
-    display: flex;
-    align-items: center;
-    background: #fff;
-    width: 250px;
-}
 
-.filter-input {
-    padding: 8px;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-    font-family: inherit;
-    font-size: 0.9rem;
-    outline: none;
-}
-
-.filter-input:focus {
-    border-color: var(--primary-color);
-}
 /* ================================================================
    5. GIAO DỊCH (TRANSACTIONS)
    ================================================================ */
@@ -356,13 +285,7 @@ body {
     font-weight: 600;
 }
 
-.search-bar {
-    padding: 0.5rem 0.75rem;
-    border: 1px solid #ccc;
-    border-radius: 20px;
-    font-size: 0.9rem;
-    font-family: 'Poppins', sans-serif;
-}
+
 
 .transaction-list {
     list-style: none;
@@ -433,54 +356,6 @@ body {
 .amount-income { color: #2ecc71; }
 .amount-transfer { color: #3498db; }
 
-/* --- Action Buttons --- */
-.action-buttons {
-    margin-left: 15px;
-    display: flex;
-    gap: 10px;
-}
-
-.btn-action {
-    background: none;
-    border: none;
-    padding: 5px;
-    cursor: pointer;
-    font-size: 1.1rem;
-    transition: all 0.2s ease;
-    color: #777;
-}
-
-.btn-edit:hover {
-    color: #007bff;
-    transform: scale(1.2);
-}
-
-.btn-delete:hover {
-    color: #e74c3c;
-    transform: scale(1.2);
-}
-
-.btn-delete-icon {
-    background: #fff0f0;
-    border: 1px solid #ffcccc;
-    color: #e74c3c;
-    cursor: pointer;
-    margin-left: 15px;
-    width: 35px;
-    height: 35px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: all 0.2s;
-    flex-shrink: 0;
-}
-
-.btn-delete-icon:hover {
-    background-color: #e74c3c;
-    color: white;
-    transform: scale(1.1);
-}
 
 /* ================================================================
    7. BÁO CÁO (REPORTS)
@@ -663,72 +538,6 @@ body {
     max-width: 500px;
 }
 
-/* --- Toggle Switch --- */
-.toggle-switch-container {
-    display: flex;
-    align-items: center;
-}
-
-.toggle-label {
-    margin-left: 12px;
-    font-weight: 500;
-    cursor: pointer;
-}
-
-.toggle-switch {
-    position: relative;
-    display: inline-block;
-    width: 60px;
-    height: 34px;
-}
-
-.toggle-switch input {
-    opacity: 0;
-    width: 0;
-    height: 0;
-}
-
-.slider {
-    position: absolute;
-    cursor: pointer;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-color: #ccc;
-    transition: .4s;
-}
-
-.slider:before {
-    position: absolute;
-    content: "";
-    height: 26px;
-    width: 26px;
-    left: 4px;
-    bottom: 4px;
-    background-color: white;
-    transition: .4s;
-}
-
-.slider.round {
-    border-radius: 34px;
-}
-
-.slider.round:before {
-    border-radius: 50%;
-}
-
-input:checked + .slider {
-    background-color: #007bff;
-}
-
-input:focus + .slider {
-    box-shadow: 0 0 1px #007bff;
-}
-
-input:checked + .slider:before {
-    transform: translateX(26px);
-}
 
 
 /* ================================================================
