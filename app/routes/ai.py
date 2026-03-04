@@ -1,4 +1,4 @@
-from flask import Blueprint, request, session, jsonify
+from flask import Blueprint, request, session, jsonify, Response, stream_with_context
 from functools import wraps
 from datetime import datetime, timedelta
 import uuid
@@ -106,29 +106,43 @@ def chat_ai():
         type_label = "CHI" if t.type == 'chi' else "THU" if t.type == 'thu' else "CHUYỂN KHOẢN"
         context_text += f"- {t.date.strftime('%d/%m')}: {int(t.amount):,}đ ({type_label}) - {cat_name} ({t.description})\n"
 
-    # --- GỌI GOOGLE GEMINI ---
+    # --- GỌI GOOGLE GEMINI VÀ TRẢ VỀ THEO LUỒNG (STREAMING) ---
     try:
-        ai_response = ai_engine.chat_with_data(user_question, context_text)
+        response_stream = ai_engine.chat_with_data(user_question, context_text)
+        
+        if isinstance(response_stream, str): # Nếu trả về string báo lỗi
+            return jsonify({'response': response_stream})
+
+        # Hàm generator để bắn từng chữ về giao diện
+        @stream_with_context
+        def generate():
+            full_answer = ""
+            try:
+                for chunk in response_stream:
+                    if chunk.text:
+                        full_answer += chunk.text
+                        yield chunk.text # Bắn ngay chữ này về Frontend
+                
+                # CHỈ LƯU DATABASE KHI ĐÃ NÓI XONG HOÀN TOÀN
+                log_id = str(uuid.uuid4())[:8]
+                db.session.add(ChatbotLog(
+                    id=log_id, 
+                    user_id=user_id, 
+                    question=user_question, 
+                    answer=full_answer, 
+                    created_at=datetime.now()
+                ))
+                db.session.commit()
+            except Exception as e:
+                print(f"Lỗi Stream/Database: {e}")
+                db.session.rollback()
+
+        # Trả về Response dạng luồng (text/plain)
+        return Response(generate(), mimetype='text/plain')
+
     except Exception as e:
         print(f"Lỗi gọi AI API: {e}")
-        return jsonify({'response': 'Hệ thống AI đang bảo trì hoặc bận kết nối, vui lòng thử lại sau!'})
-    
-    # --- LƯU LOG LỊCH SỬ CHAT ---
-    try:
-        log_id = str(uuid.uuid4())[:8]
-        db.session.add(ChatbotLog(
-            id=log_id, 
-            user_id=user_id, 
-            question=user_question, 
-            answer=ai_response, 
-            created_at=datetime.now()
-        ))
-        db.session.commit()
-    except Exception as e: 
-        print(f"Lỗi lưu log chat: {e}")
-        db.session.rollback() # Tránh treo Database nếu lưu lỗi
-    
-    return jsonify({'response': ai_response})
+        return jsonify({'response': 'Hệ thống AI đang bảo trì, vui lòng thử lại sau!'})
 
 # ==========================================
 # API 3: LẤY LỊCH SỬ TIN NHẮN CHATBOT

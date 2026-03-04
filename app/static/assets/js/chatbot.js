@@ -80,45 +80,59 @@ document.addEventListener('DOMContentLoaded', function() {
         const message = chatInput.value.trim();
         if (!message) return;
 
-        // 1. Hiển thị tin nhắn người dùng ngay lập tức
+        // 1. In câu hỏi của User
         appendMessage(message, 'user', false);
         chatInput.value = ''; 
 
-        // 2. Hiển thị trạng thái "Đang suy nghĩ..."
-        const loadingId = 'loading-' + Date.now();
-        const loadingDiv = document.createElement('div');
-        loadingDiv.className = 'chat-message ai';
-        loadingDiv.id = loadingId;
-        loadingDiv.innerHTML = `<p><em>Đang suy nghĩ... <i class="fas fa-circle-notch fa-spin"></i></em></p>`;
-        chatBody.appendChild(loadingDiv);
+        // 2. Tạo khung Chatbot trống và icon đang tải
+        const aiMessageId = 'ai-' + Date.now();
+        const div = document.createElement('div');
+        div.className = 'chat-message ai';
+        const p = document.createElement('p');
+        p.id = aiMessageId;
+        p.innerHTML = '<em><i class="fas fa-circle-notch fa-spin"></i></em>';
+        div.appendChild(p);
+        chatBody.appendChild(div);
         chatBody.scrollTop = chatBody.scrollHeight;
 
         try {
-            // 3. Gọi API
+            // 3. Gửi Request lên API
             const response = await fetch('/api/chat', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ message: message })
             });
-            
-            const data = await response.json();
-            
-            // 4. Xóa "Đang suy nghĩ..."
-            const loadingEl = document.getElementById(loadingId);
-            if (loadingEl) loadingEl.remove();
-            
-            // 5. Trả lời với hiệu ứng gõ phím
-            if (data.response) {
-                appendMessage(data.response, 'ai', true); // isTyping = true
-            } else {
-                appendMessage("Xin lỗi, tôi không nhận được phản hồi.", 'ai', false);
+
+            // Nếu server trả về lỗi JSON (không phải stream)
+            const contentType = response.headers.get("content-type");
+            if (contentType && contentType.indexOf("application/json") !== -1) {
+                const data = await response.json();
+                p.innerHTML = parseMarkdown(data.response);
+                return;
+            }
+
+            // 4. HỨNG LUỒNG DỮ LIỆU TỪ SERVER (STREAMING)
+            const reader = response.body.getReader();
+            const decoder = new TextDecoder("utf-8");
+            let fullText = '';
+            p.innerHTML = ''; // Xóa icon loading
+
+            while (true) {
+                const { done, value } = await reader.read();
+                if (done) break; // Khép luồng khi AI nói xong
+                
+                // Giải mã dữ liệu và cộng dồn vào văn bản
+                const chunk = decoder.decode(value, { stream: true });
+                fullText += chunk;
+                
+                // Dịch Markdown và in ra màn hình ngay lập tức
+                p.innerHTML = parseMarkdown(fullText);
+                chatBody.scrollTop = chatBody.scrollHeight; // Cuộn theo chữ
             }
 
         } catch (error) {
             console.error("Chat Error:", error);
-            const loadingEl = document.getElementById(loadingId);
-            if (loadingEl) loadingEl.remove();
-            appendMessage("Lỗi kết nối server. Vui lòng thử lại sau.", 'ai', false);
+            p.innerHTML = "Lỗi kết nối server. Vui lòng thử lại sau.";
         }
     }
 
