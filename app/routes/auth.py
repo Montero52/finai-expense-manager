@@ -11,18 +11,14 @@ from app.models import User, UserSetting, Wallet, PasswordResetToken
 # 1. Khai báo Blueprint
 auth_bp = Blueprint('auth', __name__)
 
-# ==========================================
-# AUTHENTICATION ROUTES (Xác thực)
-# ==========================================
-
 @auth_bp.route('/', methods=['GET', 'POST'])
 @auth_bp.route('/login', methods=['GET', 'POST'])
 def login():
     # Nếu đã đăng nhập, chuyển hướng ngay
     if 'user_id' in session:
         if session.get('user_role') == 'admin':
-            return redirect(url_for('admin.users')) # Lưu ý: Sau này đổi thành admin.users
-        return redirect(url_for('core.dashboard'))  # Lưu ý: Sau này đổi thành core.dashboard
+            return redirect(url_for('admin.users')) 
+        return redirect(url_for('views.dashboard'))  
 
     if request.method == 'POST':
         email = request.form['email']
@@ -36,8 +32,8 @@ def login():
             session['user_role'] = user.role
             
             if user.role == 'admin':
-                return redirect(url_for('admin.users')) # Lưu ý khi tách blueprint
-            return redirect(url_for('core.dashboard'))  # Lưu ý khi tách blueprint
+                return redirect(url_for('admin.users'))
+            return redirect(url_for('views.dashboard'))
         else:
             flash('Email hoặc mật khẩu không chính xác.', 'error')
 

@@ -15,7 +15,7 @@ def admin_required(f):
         if 'user_id' not in session: return redirect(url_for('auth.login'))
         if session.get('user_role') != 'admin':
             flash('Bạn không có quyền truy cập trang này!', 'error')
-            return redirect(url_for('core.dashboard'))
+            return redirect(url_for('views.dashboard'))
         return f(*args, **kwargs)
     return decorated_function
 

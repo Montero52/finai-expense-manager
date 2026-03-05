@@ -21,15 +21,23 @@ mail = Mail(app)
 with app.app_context(): 
     db.create_all()
 
-# 3. Đăng ký Blueprint cho báo cáo
+# 3. Đăng ký Blueprint cho báo cáo  
 from app.routes.auth import auth_bp
-from app.routes.core import core_bp
 from app.routes.report import report_bp
 from app.routes.ai import ai_bp
 from app.routes.admin import admin_bp
 
 app.register_blueprint(auth_bp)
-app.register_blueprint(core_bp)
 app.register_blueprint(report_bp)
 app.register_blueprint(ai_bp)
 app.register_blueprint(admin_bp)
+
+from app.routes.views import views_bp
+from app.routes.transaction import transaction_bp
+from app.routes.foundation import foundation_bp
+from app.routes.budget import budget_bp
+
+app.register_blueprint(views_bp)
+app.register_blueprint(transaction_bp)
+app.register_blueprint(foundation_bp)
+app.register_blueprint(budget_bp)

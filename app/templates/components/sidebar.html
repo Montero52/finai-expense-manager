@@ -17,12 +17,12 @@
                 <li><a href="{{ url_for('admin.ai_monitoring') }}"><span>Giám sát AI</span></a></li>
                 <li><a href="{{ url_for('admin.chatbot_logs') }}"><span>Lịch sử Chatbot</span></a></li>
             {% else %}
-                <li><a href="{{ url_for('core.dashboard') }}"><span>Tổng quan</span></a></li>
-                <li><a href="{{ url_for('core.transactions') }}"><span>Giao dịch</span></a></li>
-                <li><a href="{{ url_for('core.budgets') }}"><span>Ngân sách</span></a></li>
+                <li><a href="{{ url_for('views.dashboard') }}"><span>Tổng quan</span></a></li>
+                <li><a href="{{ url_for('views.transactions') }}"><span>Giao dịch</span></a></li>
+                <li><a href="{{ url_for('views.budgets') }}"><span>Ngân sách</span></a></li>
                 <li><a href="{{ url_for('report.reports') }}"><span>Báo cáo</span></a></li>
-                <li><a href="{{ url_for('core.foundations') }}"><span>Nền tảng</span></a></li>
-                <li><a href="{{ url_for('core.settings') }}"><span>Cài đặt</span></a></li>
+                <li><a href="{{ url_for('views.foundations') }}"><span>Nền tảng</span></a></li>
+                <li><a href="{{ url_for('views.settings') }}"><span>Cài đặt</span></a></li>
             {% endif %}
         </ul>
     </nav>
