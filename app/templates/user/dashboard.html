@@ -2,6 +2,10 @@
 
 {% block title %}Tổng quan - Quản lý Chi tiêu AI{% endblock %}
 
+{% block extra_css %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='assets/css/components/dashboard.css') }}">
+{% endblock %}
+
 {% block content %}
     <header class="main-header">
         <h1>Chào mừng trở lại, {{ user_name }}!</h1>
@@ -12,73 +16,42 @@
         
         <div class="widget wallet-summary">
             <h3 class="widget-title">Số dư các ví</h3>
-            <div class="wallet-list">
-                <div class="wallet-item">
-                    <i class="fas fa-money-bill-wave icon-wallet"></i>
-                    <h4>Ví tiền mặt</h4>
-                    <p>0 VND</p>
+            <div class="wallet-list" id="wallet-list-container">
+                <div class="text-center w-100" style="color: #999;">
+                    <i class="fas fa-spinner fa-spin"></i> Đang tải dữ liệu ví...
                 </div>
-                <div class="wallet-item">
-                    <i class="fas fa-credit-card icon-bank"></i>
-                    <h4>Tài khoản</h4>
-                    <p>0 VND</p>
-                </div>
-                <!-- <div class="wallet-item">
-                    <i class="fas fa-mobile-alt icon-momo"></i>
-                    <h4>Ví MoMo</h4>
-                    <p>0 VND</p>
-                </div> -->
             </div>
         </div>
 
         <div class="widget chart-container">
-            <h3 class="widget-title">Tổng quan Thu Chi Tháng 11</h3>
-            <div class="chart-placeholder">
-                [Khu vực này để vẽ Biểu đồ bằng JavaScript]
+            <h3 class="widget-title">Tổng quan Thu Chi Tháng Này</h3>
+            <div style="position: relative; flex-grow: 1; min-height: 0; width: 100%;">
+                <canvas id="dashboardChart"></canvas>
             </div>
         </div>
 
         <div class="widget budget-progress">
             <h3 class="widget-title">Tiến độ Ngân sách</h3>
-            <ul>
-                <li class="budget-item">
-                    <div class="budget-info">
-                        <span>Ăn uống</span>
-                        <span></span> </span>
-                    </div>
-                    <div class="progress-bar">
-                        <div class="progress-bar-fill" style="width: 0;"></div>
-                    </div>
-                </li>
-                <li class="budget-item">
-                    <div class="budget-info">
-                        <span>Mua sắm</span>
-                        <span></span>
-                    </div>
-                    <div class="progress-bar">
-                        <div class="progress-bar-fill" style="width: 0%;"></div>
-                    </div>
-                </li>
-                <li class="budget-item">
-                    <div class="budget-info">
-                        <span>Giải trí</span>
-                        <span></span>
-                    </div>
-                    <div class="progress-bar">
-                        <div class="progress-bar-fill exceeded" style="width: 0%;"></div>
-                    </div>
+            <ul id="budget-list-container">
+                <li class="text-center" style="color: #999;">
+                    <i class="fas fa-spinner fa-spin"></i> Đang tải ngân sách...
                 </li>
             </ul>
         </div>
 
         <div class="widget ai-suggestions">
             <h3 class="widget-title">Gợi ý nhanh từ AI</h3>
-            <ul class="suggestion-list">
-                <li></li>
-                <li></li>
-                <li></li>
+            <ul class="suggestion-list" id="ai-suggestion-container">
+                <li style="color: #999;">
+                    <i class="fas fa-robot fa-bounce" style="color: #007bff;"></i> AI đang phân tích dữ liệu của bạn...
+                </li>
             </ul>
         </div>
 
     </div>
+{% endblock %}
+
+{% block scripts %}
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="{{ url_for('static', filename='assets/js/dashboard.js') }}"></script>
 {% endblock %}

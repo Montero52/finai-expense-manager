@@ -1,0 +1,152 @@
+// Hàm định dạng tiền tệ
+const formatter = new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' });
+
+document.addEventListener('DOMContentLoaded', function() {
+    loadWallets();
+    loadChart();
+    loadBudgets();
+    loadAISuggestions();
+});
+
+// 1. TẢI DỮ LIỆU VÍ TIỀN
+async function loadWallets() {
+    const container = document.getElementById('wallet-list-container');
+    try {
+        const response = await fetch('/api/wallets');
+        const wallets = await response.json();
+        
+        container.innerHTML = ''; // Xóa icon loading
+        
+        if (wallets.length === 0) {
+            container.innerHTML = '<p class="text-center w-100" style="color: #999;">Chưa có ví nào. Hãy thêm ví nhé!</p>';
+            return;
+        }
+
+        const icons = ['fa-wallet', 'fa-credit-card', 'fa-piggy-bank', 'fa-money-bill-wave'];
+        const colors = ['#2ecc71', '#3498db', '#e74c3c', '#f1c40f'];
+
+        wallets.forEach((wallet, index) => {
+            const icon = icons[index % icons.length];
+            const color = colors[index % colors.length];
+            
+            const html = `
+                <div class="wallet-item">
+                    <i class="fas ${icon}" style="background-color: ${color};"></i>
+                    <h4>${wallet.TenNguonTien}</h4>
+                    <p>${formatter.format(wallet.SoDu)}</p>
+                </div>
+            `;
+            container.insertAdjacentHTML('beforeend', html);
+        });
+    } catch (error) {
+        container.innerHTML = '<p class="text-center text-danger w-100">Lỗi tải dữ liệu ví.</p>';
+        console.error("Lỗi:", error);
+    }
+}
+
+// 2. VẼ BIỂU ĐỒ THU CHI THÁNG NÀY
+async function loadChart() {
+    try {
+        // Tận dụng lại API báo cáo đã viết hôm trước
+        const response = await fetch('/api/reports/data?time_range=this_month');
+        const data = await response.json();
+        
+        const ctx = document.getElementById('dashboardChart').getContext('2d');
+        
+        new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: data.bar_chart.labels, // ['Thu nhập', 'Chi tiêu', 'Chuyển khoản']
+                datasets: [{
+                    label: 'Số tiền',
+                    data: data.bar_chart.data,
+                    backgroundColor: ['#2ecc71', '#e74c3c', '#3498db'],
+                    borderRadius: 5
+                }]
+            },
+            options: {
+                maintainAspectRatio: false,
+                plugins: { legend: { display: false } },
+                scales: {
+                    y: { ticks: { callback: function(value) { return formatter.format(value); } } }
+                }
+            }
+        });
+    } catch (error) {
+        console.error("Lỗi vẽ biểu đồ:", error);
+    }
+}
+
+// 3. TẢI TIẾN ĐỘ NGÂN SÁCH
+async function loadBudgets() {
+    const container = document.getElementById('budget-list-container');
+    try {
+        const response = await fetch('/api/budgets');
+        const budgets = await response.json();
+        
+        container.innerHTML = '';
+        
+        if (budgets.length === 0) {
+            container.innerHTML = '<li class="text-center" style="color: #999;">Bạn chưa thiết lập ngân sách nào.</li>';
+            return;
+        }
+
+        budgets.forEach(b => {
+            const progressColor = b.is_exceeded ? '#e74c3c' : (b.progress > 80 ? '#f39c12' : '#3498db');
+            
+            const html = `
+                <li class="budget-item">
+                    <div class="budget-info">
+                        <span>${b.name}</span>
+                        <span class="${b.is_exceeded ? 'text-danger fw-bold' : ''}">
+                            ${formatter.format(b.spent)} / ${formatter.format(b.amount)}
+                        </span>
+                    </div>
+                    <div class="progress-bar-table" style="height: 8px; background-color: #eee; border-radius: 4px; overflow: hidden;">
+                        <div style="width: ${b.progress}%; height: 100%; background-color: ${progressColor}; transition: width 0.5s;"></div>
+                    </div>
+                </li>
+            `;
+            container.insertAdjacentHTML('beforeend', html);
+        });
+    } catch (error) {
+        container.innerHTML = '<li class="text-center text-danger">Lỗi tải ngân sách.</li>';
+        console.error("Lỗi:", error);
+    }
+}
+
+// 4. LẤY GỢI Ý TỪ AI GEMINI
+async function loadAISuggestions() {
+    const container = document.getElementById('ai-suggestion-container');
+    try {
+        // Lấy tóm tắt dữ liệu để mớm cho AI
+        const reportRes = await fetch('/api/reports/data?time_range=this_month');
+        const reportData = await reportRes.json();
+        
+        const prompt = `Dựa vào số liệu tháng này (Thu: ${reportData.summary.total_income}, Chi: ${reportData.summary.total_expense}), hãy đóng vai chuyên gia tài chính và đưa ra đúng 3 lời khuyên ngắn gọn (mỗi lời khuyên dưới 15 chữ). Chỉ trả về nội dung text, mỗi lời khuyên 1 dòng, không dùng ký tự đặc biệt.`;
+
+        // Gọi vào API chat có sẵn của chúng ta
+        const response = await fetch('/api/chat', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ message: prompt })
+        });
+        
+        const data = await response.json();
+        container.innerHTML = '';
+        
+        // Tách câu trả lời của AI thành từng dòng và in ra
+        const suggestions = data.response.split('\n').filter(s => s.trim() !== '');
+        
+        if (suggestions.length === 0) throw new Error("AI không trả lời");
+
+        suggestions.slice(0, 3).forEach(sText => {
+            const cleanText = sText.replace(/^[-*•\d.]+\s*/, ''); // Xóa ký tự thừa đầu dòng
+            container.insertAdjacentHTML('beforeend', `<li><i class="fas fa-lightbulb"></i> ${cleanText}</li>`);
+        });
+
+    } catch (error) {
+        container.innerHTML = '<li><i class="fas fa-exclamation-triangle" style="color:#e74c3c;"></i> Hệ thống AI đang bận. Vui lòng quay lại sau.</li>';
+        console.error("Lỗi AI:", error);
+    }
+}

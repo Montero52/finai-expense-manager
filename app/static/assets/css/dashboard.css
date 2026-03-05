@@ -1,11 +1,23 @@
 .dashboard-grid {
     display: grid;
-    grid-template-columns: 1.5fr 1fr 1fr;
-    grid-template-rows: auto auto;
+    grid-template-columns: 1.25fr 1fr 1fr;
+    /* KHÔNG dùng grid-template-rows nữa để các hàng tự do ôm sát nội dung */
     grid-template-areas: 
         "chart wallet wallet"
         "chart budget ai";
-    gap: 1.5rem;
+    gap: 1rem;
+    align-items: stretch; 
+}
+
+/* Các khối Widget cơ bản */
+.widget {
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    /* ĐÃ XÓA height: 100% ở đây để khối Ví không bị phình to vô lý */
 }
 
 .chart-container { grid-area: chart; }
@@ -17,6 +29,7 @@
 .wallet-list {
     display: flex;
     gap: 1rem;
+    height: 100%;
 }
 
 .wallet-item {
@@ -25,88 +38,85 @@
     border: 1px solid #eee;
     border-radius: 8px;
     text-align: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
 }
 
-.wallet-item h4 {
-    margin: 0.5rem 0;
-    font-weight: 500;
+.wallet-item h4 { 
+    margin: 0.5rem 0; 
+    font-weight: 500; 
+    font-size: 1rem; 
+    color: #555; 
 }
 
-.wallet-item p {
-    margin: 0;
-    font-size: 1.3rem;
-    font-weight: 600;
-    color: #007bff;
+.wallet-item p { 
+    margin: 0; 
+    font-size: 1.25rem; 
+    font-weight: 600; 
+    color: #007bff; 
 }
 
-.wallet-item i {
-    font-size: 2rem;
-    padding: 10px;
-    border-radius: 50%;
-    color: #fff;
+.wallet-item i { 
+    font-size: 1.8rem; 
+    padding: 8px; 
+    border-radius: 50%; 
+    color: #fff; 
+    margin: 0 auto; 
+    width: 60px; 
+    height: 60px; 
+    display: flex; 
+    align-items: center; 
+    justify-content: center;
 }
 
 .icon-wallet { background-color: #2ecc71; }
 .icon-bank { background-color: #3498db; }
 .icon-momo { background-color: #e74c3c; }
 
-/* --- Chart --- */
-.chart-placeholder {
-    height: 400px;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    background-color: #f9f9f9;
-    border: 2px dashed #ddd;
-    border-radius: 8px;
-    color: #aaa;
-    font-weight: 500;
-}
-
-.chart-placeholder i {
-    font-size: 3rem;
-    margin-bottom: 1rem;
-    color: #ccc;
-}
-
-.chart-placeholder.large {
-    min-height: 350px;
-}
-
 /* --- Budget Progress --- */
 .budget-progress ul {
-    list-style: none;
-    padding: 0;
+    list-style: none; 
+    padding: 0; 
     margin: 0;
+    flex-grow: 1; /* Đẩy khối dãn ra */
+    overflow-y: auto;
+    max-height: 200px;
+    padding-right: 5px;
 }
 
-.budget-item {
-    margin-bottom: 1.25rem;
+.budget-progress ul::-webkit-scrollbar { width: 6px; }
+
+.budget-progress ul::-webkit-scrollbar-thumb { 
+    background-color: #d1d3e2; 
+    border-radius: 10px; 
 }
 
-.budget-info {
-    display: flex;
-    justify-content: space-between;
-    margin-bottom: 0.5rem;
-    font-weight: 500;
+.budget-item { margin-bottom: 1.25rem; }
+
+.budget-info { 
+    display: flex; 
+    justify-content: space-between; 
+    margin-bottom: 0.5rem; 
+    font-weight: 500; 
 }
 
-.budget-info i {
-    margin-right: 8px;
-    color: #555;
+.budget-info i { 
+    margin-right: 8px; 
+    color: #555; 
 }
 
-.budget-amount {
-    font-weight: 600;
-    color: #555;
+.budget-amount { 
+    font-weight: 600; 
+    color: #555; 
 }
 
 /* --- AI Suggestions --- */
 .suggestion-list {
-    list-style: none;
-    padding: 0;
+    list-style: none; 
+    padding: 0; 
     margin: 0;
+    flex-grow: 1;
 }
 
 .suggestion-list li {
@@ -116,20 +126,16 @@
     line-height: 1.5;
 }
 
-.suggestion-list li:last-child {
-    border-bottom: none;
-}
+.suggestion-list li:last-child { border-bottom: none; }
 
-.suggestion-list li i {
-    margin-right: 10px;
-    color: #f39c12;
+.suggestion-list li i { 
+    margin-right: 10px; 
+    color: #f39c12; 
 }
 
 /* ================================================================
    RESPONSIVE (MOBILE & TABLET)
    ================================================================ */
-
-/* --- Tablet & Màn hình nhỏ (< 1200px) --- */
 @media (max-width: 1200px) {
     .dashboard-grid {
         grid-template-columns: 1fr 1fr;
@@ -140,19 +146,17 @@
     }
 }
 
-/* --- Mobile (< 768px) --- */
 @media (max-width: 768px) {
-    /* Dashboard 1 cột dọc */
     .dashboard-grid {
         grid-template-columns: 1fr;
         grid-template-areas: 
-            "wallet"
-            "chart"
-            "budget"
-            "ai";
+            "wallet" 
+            "chart" 
+            "budget" 
+            "ai"; 
     }
-
-    .wallet-list {
-        flex-direction: column;
+    
+    .wallet-list { 
+        flex-direction: column; 
     }
 }
