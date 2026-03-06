@@ -75,7 +75,7 @@ document.addEventListener("DOMContentLoaded", function() {
                 grid.innerHTML += `
                     <div class="budget-card">
                         <div class="budget-card-header">
-                            <h3><i class="fas fa-wallet"></i> ${b.name}</h3>
+                            <h3></i> ${b.name}</h3>
                             <div class="budget-actions">
                                 <button class="btn-icon btn-delete" onclick="deleteBudget('${b.id}')"><i class="fas fa-trash"></i></button>
                             </div>

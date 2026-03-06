@@ -27,7 +27,7 @@ async function loadWalletsTable() {
                     <button  class="btn-action btn-edit" onclick="openEditWallet('${w.MaNguonTien}')">
                         <i class="fas fa-edit"></i>
                     </button>
-                    <button class="btn-icon btn-delete" onclick="deleteWallet('${w.MaNguonTien}')">
+                    <button class="btn-action btn-delete" onclick="deleteWallet('${w.MaNguonTien}')">
                         <i class="fas fa-trash"></i>
                     </button>
                 </td>
@@ -125,7 +125,7 @@ async function loadCategoriesTable() {
                     <button  class="btn-action btn-edit" onclick="openEditCategory('${c.MaDanhMuc}')">
                         <i class="fas fa-edit"></i>
                     </button>
-                    <button class="btn-icon btn-delete" onclick="deleteCategory('${c.MaDanhMuc}')">
+                    <button class="btn-action btn-delete" onclick="deleteCategory('${c.MaDanhMuc}')">
                         <i class="fas fa-trash"></i>
                     </button>
                 </td>
