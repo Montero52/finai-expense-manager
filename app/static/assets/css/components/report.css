@@ -1,15 +1,17 @@
 /* --- Filters --- */
 .report-filters {
     display: flex;
+    flex-direction: row;     
     gap: 1.5rem;
     margin-bottom: 1.5rem;
-    flex-wrap: wrap;
+    flex-wrap: nowrap;      
+    align-items: flex-end;   
 }
 
 .report-filters .form-group {
     margin-bottom: 0;
     flex: 1;
-    min-width: 180px;
+    min-width: 0;
 }
 
 .report-filters .form-group label {
@@ -17,7 +19,8 @@
     font-weight: 500;
 }
 
-.form-group select {
+.report-filters .form-group select {
+    width: 100%;                
     -webkit-appearance: none;
     -moz-appearance: none;
     appearance: none;
@@ -85,5 +88,13 @@
 @media (max-width: 1200px) {
     .report-grid {
         grid-template-columns: 1fr; /* Báo cáo thành 1 cột */
+    }
+}
+
+/* --- Responsive cho Điện thoại di động --- */
+@media (max-width: 768px) {
+    .report-filters {
+        flex-direction: column; /* Chỉ khi màn hình nhỏ (<768px) mới cho xếp dọc */
+        gap: 1rem;
     }
 }

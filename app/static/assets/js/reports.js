@@ -185,22 +185,27 @@ function renderTopSpendingTable(items) {
         return;
     }
 
-    items.forEach(item => {
+    // 1. Khai báo mảng màu GIỐNG HỆT như mảng màu của biểu đồ Tròn (Pie Chart)
+    const chartColors = ['#4e73df', '#1cc88a', '#36b9cc', '#f6c23e', '#e74a3b', '#858796', '#5a5c69'];
+
+    items.forEach((item, index) => {
+        // 2. Lấy màu tương ứng với thứ tự (Nếu nhiều hơn 7 danh mục thì nó sẽ quay vòng lại lấy màu đầu tiên)
+        const rowColor = chartColors[index % chartColors.length];
+
         const row = `
             <tr>
                 <td>
-                    <i class="fas fa-circle" style="color: #4e73df; font-size: 8px; margin-right: 5px;"></i> 
+                    <i class="fas fa-circle" style="color: ${rowColor}; font-size: 8px; margin-right: 5px;"></i> 
                     ${item.category}
                 </td>
                 <td style="font-weight: 600;">${item.amount_formatted}</td>
                 <td>
-                    <div class="progress" style="height: 10px; border-radius: 5px; background-color: #eaecf4;">
-                        <div class="progress-bar bg-primary" role="progressbar" 
-                             style="width: ${item.percent}%" 
-                             aria-valuenow="${item.percent}" aria-valuemin="0" aria-valuemax="100">
+                    <div class="progress-bar-table">
+                        <div class="progress-bar-fill" 
+                             style="width: ${item.percent}%; background-color: ${rowColor};">
                         </div>
                     </div>
-                    <small style="color: #858796;">${item.percent}%</small>
+                    <small style="color: #858796; display: block; margin-top: 4px;">${item.percent}%</small>
                 </td>
             </tr>
         `;
