@@ -28,7 +28,7 @@
     </nav>
     
     <div class="sidebar-footer">
-        <a href="{{ url_for('auth.logout') }}">
+        <a href="{{ url_for('auth.logout') }}" onclick="sessionStorage.clear();">
             <i class="fas fa-sign-out-alt"></i>
             <span>Đăng xuất</span>
         </a>

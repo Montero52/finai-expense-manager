@@ -115,38 +115,44 @@ async function loadBudgets() {
     }
 }
 
-// 4. LẤY GỢI Ý TỪ AI GEMINI
+// 4. LẤY GỢI Ý TỪ AI GEMINI (CÓ BỘ NHỚ ĐỆM CACHE & ĐÃ NÂNG CẤP DÙNG API RIÊNG)
 async function loadAISuggestions() {
     const container = document.getElementById('ai-suggestion-container');
-    try {
-        // Lấy tóm tắt dữ liệu để mớm cho AI
-        const reportRes = await fetch('/api/reports/data?time_range=this_month');
-        const reportData = await reportRes.json();
-        
-        const prompt = `Dựa vào số liệu tháng này (Thu: ${reportData.summary.total_income}, Chi: ${reportData.summary.total_expense}), hãy đóng vai chuyên gia tài chính và đưa ra đúng 3 lời khuyên ngắn gọn (mỗi lời khuyên dưới 15 chữ). Chỉ trả về nội dung text, mỗi lời khuyên 1 dòng, không dùng ký tự đặc biệt.`;
-
-        // Gọi vào API chat có sẵn của chúng ta
-        const response = await fetch('/api/chat', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ message: prompt })
-        });
-        
-        const data = await response.json();
+    
+    // --- BƯỚC 1: KIỂM TRA CACHE TRƯỚC ---
+    const cachedData = sessionStorage.getItem('finai_dashboard_insights');
+    if (cachedData) {
+        // Nếu đã có cache, in ra ngay lập tức không cần đợi
+        const insights = JSON.parse(cachedData);
         container.innerHTML = '';
-        
-        // Tách câu trả lời của AI thành từng dòng và in ra
-        const suggestions = data.response.split('\n').filter(s => s.trim() !== '');
-        
-        if (suggestions.length === 0) throw new Error("AI không trả lời");
-
-        suggestions.slice(0, 3).forEach(sText => {
-            const cleanText = sText.replace(/^[-*•\d.]+\s*/, ''); // Xóa ký tự thừa đầu dòng
-            container.insertAdjacentHTML('beforeend', `<li><i class="fas fa-lightbulb"></i> ${cleanText}</li>`);
+        insights.forEach(text => {
+            container.insertAdjacentHTML('beforeend', `<li><i class="fas fa-lightbulb"></i> ${text}</li>`);
         });
+        return; // Dừng hàm tại đây, KHÔNG GỌI API NỮA!
+    }
+
+    // --- BƯỚC 2: NẾU CHƯA CÓ CACHE THÌ MỚI GỌI API ---
+    try {
+        const response = await fetch('/api/dashboard-insights');
+        const result = await response.json();
+        
+        container.innerHTML = ''; // Xóa icon loading
+        
+        if (result.status === 'success' && result.data.length > 0) {
+            
+            // LƯU KẾT QUẢ VÀO CACHE CHO LẦN SAU
+            sessionStorage.setItem('finai_dashboard_insights', JSON.stringify(result.data));
+
+            // Lặp qua mảng 3 câu khuyên và in ra
+            result.data.forEach(text => {
+                container.insertAdjacentHTML('beforeend', `<li><i class="fas fa-lightbulb"></i> ${text}</li>`);
+            });
+        } else {
+            throw new Error(result.message || "AI không trả về dữ liệu.");
+        }
 
     } catch (error) {
         container.innerHTML = '<li><i class="fas fa-exclamation-triangle" style="color:#e74c3c;"></i> Hệ thống AI đang bận. Vui lòng quay lại sau.</li>';
-        console.error("Lỗi AI:", error);
+        console.error("Lỗi tải AI Dashboard:", error);
     }
 }

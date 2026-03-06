@@ -227,6 +227,7 @@ async function handleAddTransaction(event) {
             cancelEdit();
             loadTransactions();
             loadWallets(); 
+            sessionStorage.removeItem('finai_dashboard_insights');
         } else { alert('Lỗi: ' + result.message); }
     } catch (error) { console.error('Lỗi kết nối:', error); }
 }
@@ -235,7 +236,11 @@ async function deleteTransaction(id) {
     if (!confirm('Bạn có chắc muốn xóa giao dịch này? Tiền sẽ được hoàn lại vào ví.')) return;
     try {
         const response = await fetch(`/api/transactions/${id}`, { method: 'DELETE' });
-        if (response.ok) { loadTransactions(); loadWallets(); } 
+        if (response.ok) { 
+            loadTransactions(); 
+            loadWallets(); 
+            sessionStorage.removeItem('finai_dashboard_insights');
+        } 
         else { alert('Xóa thất bại.'); }
     } catch (error) { console.error('Lỗi xóa:', error); }
 }

@@ -159,3 +159,60 @@ def get_chat_history():
         history.append({'role': 'user', 'content': log.question})
         history.append({'role': 'ai', 'content': log.answer})
     return jsonify(history)
+
+# ==========================================
+# API 4: GỢI Ý NHANH CHO DASHBOARD (JSON)
+# ==========================================
+@ai_bp.route('/api/dashboard-insights', methods=['GET'])
+@api_login_required
+def dashboard_insights():
+    user_id = session['user_id']
+    
+    # 1. Lấy dữ liệu tổng quan tháng này
+    today = datetime.today()
+    first_day = today.replace(day=1)
+    
+    # Lấy toàn bộ giao dịch từ đầu tháng
+    transactions = Transaction.query.filter(
+        Transaction.user_id == user_id,
+        Transaction.date >= first_day
+    ).all()
+    
+    total_income = sum(t.amount for t in transactions if t.type == 'thu')
+    total_expense = sum(t.amount for t in transactions if t.type == 'chi')
+    
+    # 2. Xây dựng Prompt "Ép khuôn" AI (Đã tối ưu hóa)
+    context_text = f"Thống kê tháng này - Thu nhập: {int(total_income):,} VND. Chi tiêu: {int(total_expense):,} VND."
+    
+    question = (
+        "Dựa vào số liệu trên, hãy đưa ra 3 lời khuyên tài chính. "
+        "YÊU CẦU NGHIÊM NGẶT ĐỂ ĐỊNH DẠNG: "
+        "1. TUYỆT ĐỐI KHÔNG chào hỏi, KHÔNG xưng hô (vd: Cấm dùng 'Chào bạn', 'FinAI đây'). "
+        "2. TUYỆT ĐỐI KHÔNG có câu dẫn dắt (vd: Cấm dùng 'Đây là lời khuyên...'). "
+        "3. Trả về ĐÚNG 3 dòng, mỗi dòng là một lời khuyên trực tiếp, hành động ngay. "
+        "4. Độ dài tối đa: Dưới 15 chữ cho MỖI dòng. "
+        "5. Không dùng markdown, không dùng icon."
+    )
+    try:
+        # Gọi AI (Tận dụng lại hàm chat_with_data)
+        response_stream = ai_engine.chat_with_data(question, context_text)
+        
+        if isinstance(response_stream, str): # Xử lý lỗi từ engine
+            return jsonify({'status': 'error', 'message': response_stream})
+            
+        # 3. Gom toàn bộ luồng Stream lại thành 1 chuỗi duy nhất ở Backend
+        full_answer = ""
+        for chunk in response_stream:
+            if chunk.text:
+                full_answer += chunk.text
+                
+        # 4. Làm sạch dữ liệu và tách thành mảng (Array) 3 câu
+        # Lọc bỏ các dòng trống và ký tự gạch đầu dòng rườm rà
+        insights = [line.strip().lstrip('-*•').strip() for line in full_answer.split('\n') if line.strip()]
+        
+        # Trả về JSON tĩnh chuẩn mực
+        return jsonify({'status': 'success', 'data': insights[:3]})
+        
+    except Exception as e:
+        print(f"Lỗi AI Dashboard: {e}")
+        return jsonify({'status': 'error', 'message': 'Hệ thống AI đang bận.'}), 500
