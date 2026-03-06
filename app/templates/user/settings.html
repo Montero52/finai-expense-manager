@@ -85,21 +85,21 @@
                 </div>
             </div>
             
-            <div id="preferences" class="tab-panel">
+<div id="preferences" class="tab-panel">
                 <h2>Tùy chỉnh</h2>
-                <form class="form-section">
+                <form id="formPreferences" class="form-section">
                     <div class="form-group">
                         <label for="currency">Đơn vị tiền tệ</label>
                         <select id="currency">
-                            <option value="VND">VND (Việt Nam Đồng)</option>
-                            <option value="USD">USD (US Dollar)</option>
+                            <option value="VND" {% if user.settings.currency == 'VND' %}selected{% endif %}>VND (Việt Nam Đồng)</option>
+                            <option value="USD" {% if user.settings.currency == 'USD' %}selected{% endif %}>USD (US Dollar)</option>
                         </select>
                     </div>
                     <div class="form-group">
                         <label for="language">Ngôn ngữ</label>
                         <select id="language">
-                            <option value="vi">Tiếng Việt</option>
-                            <option value="en">English</option>
+                            <option value="vi" {% if user.settings.language == 'vi' %}selected{% endif %}>Tiếng Việt</option>
+                            <option value="en" {% if user.settings.language == 'en' %}selected{% endif %}>English</option>
                         </select>
                     </div>
                     <button type="submit" class="btn btn-primary">Lưu Tùy chỉnh</button>
@@ -110,13 +110,15 @@
                 <h2>Cài đặt AI</h2>
                 <div class="form-section">
                     <h3>Gợi ý thông minh</h3>
-                    <p>Cho phép AI tự động gợi ý danh mục khi bạn thêm một giao dịch mới.</p>
+                    <p>Cho phép AI tự động gợi ý danh mục và nhận xét báo cáo tài chính.</p>
                     <div class="toggle-switch-container">
                         <label class="toggle-switch">
-                            <input type="checkbox" id="aiSuggestion" checked>
+                            <input type="checkbox" id="aiSuggestion" {% if user.settings.ai_suggestions == 1 %}checked{% endif %}>
                             <span class="slider round"></span>
                         </label>
-                        <label for="aiSuggestion" class="toggle-label">Bật gợi ý AI</label>
+                        <label for="aiSuggestion" class="toggle-label" id="aiStatusLabel">
+                            {% if user.settings.ai_suggestions == 1 %}Đang Bật{% else %}Đang Tắt{% endif %}
+                        </label>
                     </div>
                 </div>
             </div>

@@ -1,10 +1,24 @@
 from flask import Blueprint, render_template, request, jsonify, session, redirect, url_for
-from app.models import User
+from app.models import User, UserSetting
 from app import db
-from app.utils import api_login_required
-
+from app.utils import api_login_required, login_required
 # Khai báo Blueprint
 settings_bp = Blueprint('settings', __name__)
+
+@settings_bp.route('/settings')
+@login_required
+def settings():
+    # 1. Lấy thông tin user
+    current_user = User.query.get(session['user_id']) 
+    
+    # 2. Tạo setting mặc định nếu chưa có
+    if not current_user.settings:
+        new_settings = UserSetting(user_id=current_user.id)
+        db.session.add(new_settings)
+        db.session.commit()
+        
+    # 3. BẮT BUỘC PHẢI CÓ user=current_user Ở ĐÂY
+    return render_template('user/settings.html', user=current_user)
 
 # 2. API CẬP NHẬT HỌ TÊN
 @settings_bp.route('/api/settings/profile', methods=['POST'])
@@ -54,3 +68,42 @@ def update_password():
     except Exception as e:
         db.session.rollback()
         return jsonify({'status': 'error', 'message': 'Lỗi server: ' + str(e)}), 500
+    
+# 4. API LƯU TÙY CHỈNH (Ngôn ngữ, Tiền tệ)
+@settings_bp.route('/api/settings/preferences', methods=['POST'])
+@api_login_required
+def update_preferences():
+    data = request.json
+    currency = data.get('currency', 'VND')
+    language = data.get('language', 'vi')
+    
+    try:
+        user_setting = UserSetting.query.get(session['user_id'])
+        user_setting.currency = currency
+        user_setting.language = language
+        db.session.commit()
+        return jsonify({'status': 'success', 'message': 'Đã lưu tùy chỉnh!'})
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({'status': 'error', 'message': 'Lỗi server: ' + str(e)}), 500
+
+# 5. API BẬT/TẮT AI
+@settings_bp.route('/api/settings/ai', methods=['POST'])
+@api_login_required
+
+def update_ai_settings():
+    data = request.json
+    # Trả về True/False từ giao diện
+    ai_enabled = data.get('aiSuggestion') 
+    
+    try:
+        user_setting = UserSetting.query.get(session['user_id'])
+        # Trong DB cột này là Integer (1 = Bật, 0 = Tắt)
+        user_setting.ai_suggestions = 1 if ai_enabled else 0
+        db.session.commit()
+        
+        status_msg = 'Đã BẬT AI' if ai_enabled else 'Đã TẮT AI'
+        return jsonify({'status': 'success', 'message': status_msg})
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({'status': 'error', 'message': 'Lỗi server: ' + str(e)}),

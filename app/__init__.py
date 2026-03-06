@@ -38,7 +38,7 @@ from app.routes.foundation import foundation_bp
 from app.routes.budget import budget_bp
 from app.routes.settings import settings_bp
 
-
+app.register_blueprint(settings_bp)
 app.register_blueprint(views_bp)
 app.register_blueprint(transaction_bp)
 app.register_blueprint(foundation_bp)

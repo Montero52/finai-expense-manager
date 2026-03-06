@@ -108,4 +108,79 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
     }
+
+    // ==========================================
+    // 3. LƯU TÙY CHỈNH (Ngôn ngữ, Tiền tệ)
+    // ==========================================
+    const formPreferences = document.getElementById('formPreferences');
+    if (formPreferences) {
+        formPreferences.addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const btn = this.querySelector('button[type="submit"]');
+            const originalText = btn.innerHTML;
+            
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Đang lưu...';
+            btn.disabled = true;
+
+            try {
+                const res = await fetch('/api/settings/preferences', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        currency: document.getElementById('currency').value,
+                        language: document.getElementById('language').value
+                    })
+                });
+                const data = await res.json();
+                
+                if (res.ok) alert('✅ ' + data.message);
+                else alert('❌ ' + data.message);
+            } catch (err) {
+                alert('Lỗi kết nối máy chủ!');
+            } finally {
+                btn.innerHTML = originalText;
+                btn.disabled = false;
+            }
+        });
+    }
+
+    // ==========================================
+    // 4. BẬT/TẮT AI (Tự động lưu khi gạt nút)
+    // ==========================================
+    const aiToggle = document.getElementById('aiSuggestion');
+    const aiLabel = document.getElementById('aiStatusLabel');
+    
+    if (aiToggle) {
+        aiToggle.addEventListener('change', async function() {
+            // Tạm thời vô hiệu hóa nút gạt để chờ API
+            this.disabled = true;
+            aiLabel.innerText = "Đang xử lý...";
+            
+            const isChecked = this.checked;
+
+            try {
+                const res = await fetch('/api/settings/ai', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ aiSuggestion: isChecked })
+                });
+                const data = await res.json();
+                
+                if (res.ok) {
+                    // Cập nhật nhãn bằng chữ cho đẹp
+                    aiLabel.innerText = isChecked ? "Đang Bật" : "Đang Tắt";
+                } else {
+                    alert('❌ ' + data.message);
+                    this.checked = !isChecked; // Trả lại trạng thái cũ nếu lỗi
+                    aiLabel.innerText = !isChecked ? "Đang Bật" : "Đang Tắt";
+                }
+            } catch (err) {
+                alert('Lỗi kết nối máy chủ!');
+                this.checked = !isChecked;
+                aiLabel.innerText = !isChecked ? "Đang Bật" : "Đang Tắt";
+            } finally {
+                this.disabled = false;
+            }
+        });
+    }
 });
