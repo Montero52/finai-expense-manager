@@ -33,13 +33,12 @@
         </nav>
         
         <div class="settings-content">
-            
             <div id="profile" class="tab-panel active">
                 <h2>Hồ sơ cá nhân</h2>
-                <form class="form-section">
+                <form id="formUpdateProfile" class="form-section">
                     <div class="form-group">
                         <label for="fullName">Họ và tên</label>
-                        <input type="text" id="fullName" value="[Tên người dùng hiện tại]">
+                        <input type="text" id="fullName" name="fullName" value="{{ user.name }}" required>
                     </div>
                     <button type="submit" class="btn btn-primary">Lưu thay đổi</button>
                 </form>
@@ -48,33 +47,29 @@
             <div id="account" class="tab-panel">
                 <h2>Tài khoản</h2>
                 <form class="form-section">
-                    <h3>Đổi địa chỉ Email</h3>
+                    <h3>Thông tin Email</h3>
                     <div class="form-group">
                         <label for="email">Email</label>
-                        <input type="email" id="email" value="[email@hientai.com]" disabled>
+                        <input type="email" id="email" value="{{ user.email }}" disabled>
                     </div>
-                    <div class="form-group">
-                        <label for="newEmail">Email mới</label>
-                        <input type="email" id="newEmail">
-                    </div>
-                    <button type="submit" class="btn btn-primary">Lưu Email mới</button>
+                    <small class="text-muted">Tính năng đổi email đang được phát triển.</small>
                 </form>
                 
                 <hr>
                 
-                <form class="form-section">
+                <form id="formUpdatePassword" class="form-section">
                     <h3>Đổi Mật khẩu</h3>
                     <div class="form-group">
                         <label for="currentPassword">Mật khẩu hiện tại</label>
-                        <input type="password" id="currentPassword">
+                        <input type="password" id="currentPassword" required>
                     </div>
                     <div class="form-group">
                         <label for="newPassword">Mật khẩu mới</label>
-                        <input type="password" id="newPassword">
+                        <input type="password" id="newPassword" required minlength="6">
                     </div>
                     <div class="form-group">
                         <label for="confirmNewPassword">Xác nhận mật khẩu mới</label>
-                        <input type="password" id="confirmNewPassword">
+                        <input type="password" id="confirmNewPassword" required minlength="6">
                     </div>
                     <button type="submit" class="btn btn-primary">Đổi Mật khẩu</button>
                 </form>
@@ -131,26 +126,5 @@
 {% endblock %}
 
 {% block scripts %}
-    <script>
-        // Logic chuyển đổi Tab (JS riêng cho trang Settings)
-        const navLinks = document.querySelectorAll('.settings-nav-link');
-        const tabPanels = document.querySelectorAll('.tab-panel');
-
-        navLinks.forEach(link => {
-            link.addEventListener('click', function(e) {
-                e.preventDefault(); // Ngăn chặn hành vi nhảy trang mặc định
-
-                // Lấy ID tab cần mở
-                const tabId = this.getAttribute('data-tab');
-
-                // 1. Xóa class active cũ
-                navLinks.forEach(nav => nav.classList.remove('active'));
-                tabPanels.forEach(panel => panel.classList.remove('active'));
-
-                // 2. Bật class active cho tab mới
-                this.classList.add('active');
-                document.getElementById(tabId).classList.add('active');
-            });
-        });
-    </script>
+    <script src="{{ url_for('static', filename='assets/js/settings.js') }}"></script>
 {% endblock %}

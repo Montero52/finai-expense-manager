@@ -1,5 +1,6 @@
 from flask import Blueprint, render_template, session, redirect, url_for
 from app.utils import login_required
+from app.models import User
 
 views_bp = Blueprint('views', __name__)
 
@@ -28,7 +29,11 @@ def foundations():
 @views_bp.route('/settings')
 @login_required
 def settings():
-    return render_template('user/settings.html')
+    # 1. Tìm user hiện tại trong Database bằng ID lưu trong session
+    current_user = User.query.get(session['user_id']) 
+    
+    # 2. Truyền biến user sang template
+    return render_template('user/settings.html', user=current_user)
 
 @views_bp.route('/reports')
 @login_required
