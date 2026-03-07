@@ -17,14 +17,16 @@
     
     {% block extra_css %}{% endblock %}
     
-    <script>
-        // 1. Lấy biến tiền tệ từ DB
+<script>
+        // 1. Cấu hình tiền tệ
         window.USER_CURRENCY = "{% if user and user.settings %}{{ user.settings.currency }}{% else %}VND{% endif %}";
-        
-        // 2. Xác định Locale (Vùng)
         window.USER_LOCALE = window.USER_CURRENCY === 'USD' ? 'en-US' : 'vi-VN';
 
-        // 3. Khởi tạo bộ định dạng dùng chung cho toàn hệ thống
+        // 2. KHAI BÁO TỶ GIÁ (Ví dụ: 1 USD = 25,400 VND)
+        // Hệ thống ngầm hiểu toàn bộ Database đang lưu bằng VND
+        window.EXCHANGE_RATE = 254000; 
+
+        // 3. Khởi tạo bộ định dạng
         const globalFormatter = new Intl.NumberFormat(window.USER_LOCALE, {
             style: 'currency',
             currency: window.USER_CURRENCY,
@@ -32,10 +34,37 @@
             maximumFractionDigits: window.USER_CURRENCY === 'VND' ? 0 : 2
         });
 
-        // 4. TẠO HÀM TOÀN CỤC: Bất kỳ file JS nào cũng gọi được hàm này
+        // 4. HÀM TOÀN CỤC: Tự động chia tỷ giá nếu user chọn USD
         window.formatMoney = function(amount) {
-            // Ép kiểu về số (float) đề phòng data truyền vào là chuỗi
-            return globalFormatter.format(parseFloat(amount));
+            let finalAmount = parseFloat(amount);
+
+            // BÀI TOÁN QUY ĐỔI NẰM Ở ĐÂY:
+            // Nếu User đang dùng USD, ta lấy tiền VND trong DB chia cho tỷ giá
+            if (window.USER_CURRENCY === 'USD') {
+                finalAmount = finalAmount / window.EXCHANGE_RATE;
+            }
+
+            return globalFormatter.format(finalAmount);
+        };
+        // 5. HÀM XỬ LÝ KHI MỞ FORM SỬA (Đưa số từ DB lên Input)
+        // VD: DB là 254000 VND -> Nếu đang ở USD thì ô Input chỉ hiện số 10
+        window.formatMoneyForInput = function(amount) {
+            let finalAmount = parseFloat(amount) || 0;
+            if (window.USER_CURRENCY === 'USD') {
+                // Trả về số thập phân 2 chữ số (không kèm ký hiệu $) để đưa vào thẻ <input type="number">
+                return parseFloat((finalAmount / window.EXCHANGE_RATE).toFixed(2));
+            }
+            return finalAmount;
+        };
+
+        // 6. HÀM XỬ LÝ KHI LƯU FORM (Đưa số từ Input về DB)
+        // VD: Nhập 10 USD -> Nhân tỷ giá -> Gửi 254000 VND lên Backend
+        window.parseMoneyToBase = function(inputAmount) {
+            let amount = parseFloat(inputAmount) || 0;
+            if (window.USER_CURRENCY === 'USD') {
+                return amount * window.EXCHANGE_RATE;
+            }
+            return amount;
         };
     </script>
 </head>

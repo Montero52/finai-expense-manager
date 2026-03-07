@@ -1,5 +1,3 @@
-// static/assets/js/foundations.js
-
 // ==================== QUẢN LÝ VÍ (WALLETS) ====================
 let currentWallets = []; // Biến toàn cục lưu danh sách ví
 
@@ -46,7 +44,7 @@ function openEditWallet(id) {
     document.getElementById('edit-wallet-id').value = w.MaNguonTien;
     document.getElementById('walletName').value = w.TenNguonTien;
     document.getElementById('walletType').value = w.LoaiNguonTien;
-    document.getElementById('walletBalance').value = w.SoDu;
+    document.getElementById('walletBalance').value = formatMoneyForInput(w.SoDu);
 
     // Đổi tiêu đề Modal
     document.getElementById('walletModalTitle').textContent = "Cập nhật Nguồn tiền";
@@ -68,7 +66,7 @@ async function handleAddWallet(e) {
     const data = {
         name: document.getElementById('walletName').value,
         type: document.getElementById('walletType').value,
-        balance: document.getElementById('walletBalance').value
+        balance: parseMoneyToBase(document.getElementById('walletBalance').value)
     };
 
     const res = await fetch(url, {

@@ -1,20 +1,3 @@
-// ==========================================
-// HỆ THỐNG ĐỊNH DẠNG TIỀN TỆ THÔNG MINH
-// ==========================================
-// 1. Lấy loại tiền tệ từ base.html truyền sang
-const userCurrency = window.USER_CURRENCY || 'VND';
-
-// 2. Xác định quốc gia để hiển thị dấu phẩy/chấm cho đúng chuẩn
-const userLocale = userCurrency === 'USD' ? 'en-US' : 'vi-VN';
-
-// 3. Cấu hình bộ định dạng
-const formatter = new Intl.NumberFormat(userLocale, {
-    style: 'currency',
-    currency: userCurrency,
-    currencyDisplay: 'symbol', // Hiện ký hiệu ngắn gọn (₫ hoặc $) thay vì chữ (VND/USD)
-    maximumFractionDigits: userCurrency === 'VND' ? 0 : 2 // Mẹo: Tiền Việt thì chặt bỏ số 0 thập phân cho gọn, tiền Đô thì giữ lại 2 số
-});
-
 document.addEventListener('DOMContentLoaded', function() {
     loadWallets();
     loadChart();
@@ -47,7 +30,7 @@ async function loadWallets() {
                 <div class="wallet-item">
                     <i class="fas ${icon}" style="background-color: ${color};"></i>
                     <h4>${wallet.TenNguonTien}</h4>
-                    <p>${formatter.format(wallet.SoDu)}</p>
+                    <p>${formatMoney(wallet.SoDu)}</p>
                 </div>
             `;
             container.insertAdjacentHTML('beforeend', html);
@@ -82,7 +65,7 @@ async function loadChart() {
                 maintainAspectRatio: false,
                 plugins: { legend: { display: false } },
                 scales: {
-                    y: { ticks: { callback: function(value) { return formatter.format(value); } } }
+                    y: { ticks: { callback: function(value) { return formatMoney(value); } } }
                 }
             }
         });
@@ -113,7 +96,7 @@ async function loadBudgets() {
                     <div class="budget-info">
                         <span>${b.name}</span>
                         <span class="${b.is_exceeded ? 'text-danger fw-bold' : ''}">
-                            ${formatter.format(b.spent)} / ${formatter.format(b.amount)}
+                            ${formatMoney(b.spent)} / ${formatMoney(b.amount)}
                         </span>
                     </div>
                     <div class="progress-bar-table" style="height: 8px; background-color: #eee; border-radius: 4px; overflow: hidden;">

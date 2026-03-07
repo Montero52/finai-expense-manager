@@ -207,7 +207,7 @@ async function handleAddTransaction(event) {
 
     const data = {
         type: document.getElementById('transaction-type').value,
-        amount: document.getElementById('amount').value,
+        amount: parseMoneyToBase(document.getElementById('amount').value),
         description: document.getElementById('description').value,
         date: document.getElementById('date').value,
         category_id: document.getElementById('category').value,
