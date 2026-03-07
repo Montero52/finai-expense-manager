@@ -95,8 +95,8 @@ async function loadWallets() {
 
         if (wallets.length > 0) {
             wallets.forEach(wallet => {
-                const balance = parseInt(wallet.SoDu).toLocaleString('vi-VN');
-                const text = `${wallet.TenNguonTien} (${balance} đ)`;
+                const balance = formatMoney(wallet.SoDu); 
+                const text = `${wallet.TenNguonTien} (${balance})`;
                 
                 if(sourceSelect) {
                     const opt1 = document.createElement('option');
@@ -207,7 +207,7 @@ async function handleAddTransaction(event) {
 
     const data = {
         type: document.getElementById('transaction-type').value,
-        amount: parseMoneyToBase(document.getElementById('amount').value),
+        amount: parseMoneyToBase(ocument.getElementById('amount').value),
         description: document.getElementById('description').value,
         date: document.getElementById('date').value,
         category_id: document.getElementById('category').value,
@@ -239,7 +239,7 @@ async function deleteTransaction(id) {
         if (response.ok) { 
             loadTransactions(); 
             loadWallets(); 
-            sessionStorage.removeItem('finai_dashboard_insights');
+            sessionStorage.removeItem(' finai_dashboard_insights');
         } 
         else { alert('Xóa thất bại.'); }
     } catch (error) { console.error('Lỗi xóa:', error); }
@@ -251,7 +251,7 @@ function startEdit(id) {
 
     document.querySelector('.transaction-form-card').scrollIntoView({ behavior: 'smooth' });
     document.getElementById('edit-transaction-id').value = t.id;
-    document.getElementById('amount').value = t.amount;
+    document.getElementById('amount').value = formatMoneyForInput(t.amount);
     document.getElementById('description').value = t.description;
     lastDescription = t.description; // Lưu lại để tránh AI chạy khi không cần thiết
     document.getElementById('date').value = t.date;

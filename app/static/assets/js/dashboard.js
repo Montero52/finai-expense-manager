@@ -30,7 +30,7 @@ async function loadWallets() {
                 <div class="wallet-item">
                     <i class="fas ${icon}" style="background-color: ${color};"></i>
                     <h4>${wallet.TenNguonTien}</h4>
-                    <p>${formatMoney(wallet.SoDu)}</p>
+                    <p>${formatMoney(wallet.SoDu)}</p> 
                 </div>
             `;
             container.insertAdjacentHTML('beforeend', html);
@@ -63,7 +63,21 @@ async function loadChart() {
             },
             options: {
                 maintainAspectRatio: false,
-                plugins: { legend: { display: false } },
+                plugins: { 
+                    legend: { display: false },
+                    // THÊM ĐOẠN TOOLTIP NÀY VÀO ĐỂ ÉP NÓ DÙNG FORMATMONEY
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                let label = context.dataset.label || '';
+                                if (label) {
+                                    label += ': ';
+                                }
+                                return label + formatMoney(context.raw);
+                            }
+                        }
+                    }
+                },
                 scales: {
                     y: { ticks: { callback: function(value) { return formatMoney(value); } } }
                 }

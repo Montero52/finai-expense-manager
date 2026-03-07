@@ -112,7 +112,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
         const data = {
             name: document.getElementById('budgetName').value,
-            amount: document.getElementById('budgetAmount').value,
+            amount: parseMoneyToBase(document.getElementById('budgetAmount').value),
             start_date: document.getElementById('budgetStart').value,
             end_date: document.getElementById('budgetEnd').value,
             category_ids: selectedCats
