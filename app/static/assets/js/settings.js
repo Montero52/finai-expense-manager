@@ -46,9 +46,9 @@ document.addEventListener('DOMContentLoaded', function() {
                 const data = await res.json();
                 
                 if (res.ok && data.status === 'success') {
-                    alert('✅ ' + data.message);
+                    alert(' ' + data.message);
                 } else {
-                    alert('❌ ' + data.message);
+                    alert(' ' + data.message);
                 }
             } catch (err) {
                 alert('Lỗi kết nối máy chủ!');
@@ -72,7 +72,7 @@ document.addEventListener('DOMContentLoaded', function() {
             const confirmNewPassword = document.getElementById('confirmNewPassword').value;
             
             if (newPassword !== confirmNewPassword) {
-                alert('❌ Mật khẩu mới không khớp nhau!');
+                alert('Mật khẩu mới không khớp nhau!');
                 return;
             }
 
@@ -95,10 +95,10 @@ document.addEventListener('DOMContentLoaded', function() {
                 const data = await res.json();
                 
                 if (res.ok && data.status === 'success') {
-                    alert('✅ ' + data.message);
+                    alert(' ' + data.message);
                     formPassword.reset(); // Xóa trắng form sau khi đổi thành công
                 } else {
-                    alert('❌ ' + data.message);
+                    alert(' ' + data.message);
                 }
             } catch (err) {
                 alert('Lỗi kết nối máy chủ!');
@@ -133,8 +133,8 @@ document.addEventListener('DOMContentLoaded', function() {
                 });
                 const data = await res.json();
                 
-                if (res.ok) alert('✅ ' + data.message);
-                else alert('❌ ' + data.message);
+                if (res.ok) alert(' ' + data.message);
+                else alert(' ' + data.message);
             } catch (err) {
                 alert('Lỗi kết nối máy chủ!');
             } finally {
@@ -169,8 +169,10 @@ document.addEventListener('DOMContentLoaded', function() {
                 if (res.ok) {
                     // Cập nhật nhãn bằng chữ cho đẹp
                     aiLabel.innerText = isChecked ? "Đang Bật" : "Đang Tắt";
+
+                    sessionStorage.removeItem('finai_dashboard_insights');
                 } else {
-                    alert('❌ ' + data.message);
+                    alert(' ' + data.message);
                     this.checked = !isChecked; // Trả lại trạng thái cũ nếu lỗi
                     aiLabel.innerText = !isChecked ? "Đang Bật" : "Đang Tắt";
                 }

@@ -137,7 +137,24 @@ async function loadAISuggestions() {
         const result = await response.json();
         
         container.innerHTML = ''; // Xóa icon loading
-        
+
+        // ==========================================
+        //  TRẠM KIỂM SOÁT: BẮT TÍN HIỆU AI BỊ TẮT
+        // ==========================================
+
+        if (result.status === 'disabled') {
+            container.innerHTML = `
+                <div style="text-align: center; color: #858796; padding: 15px 0;">
+                    <p style="margin-bottom: 5px; font-weight: 500;">Gợi ý Thông minh đang tắt.</p>
+                    <a href="/settings#ai" style="font-size: 0.85rem; color: #4e73df; text-decoration: none;">
+                        <i class="fas fa-cog"></i> Bật AI trong Cài đặt
+                    </a>
+                </div>
+            `;
+            return; // Dừng hàm ngay lập tức, không chạy các lệnh dưới nữa
+        }
+
+
         if (result.status === 'success' && result.data.length > 0) {
             
             // LƯU KẾT QUẢ VÀO CACHE CHO LẦN SAU

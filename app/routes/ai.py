@@ -5,7 +5,7 @@ import uuid
 from sqlalchemy import func
 
 from app import db
-from app.models import Category, Transaction, Wallet, ChatbotLog
+from app.models import Category, Transaction, Wallet, ChatbotLog, UserSetting
 from app.ai_service import ai_engine
 
 # Khai báo Blueprint
@@ -167,7 +167,14 @@ def get_chat_history():
 @api_login_required
 def dashboard_insights():
     user_id = session['user_id']
-    
+
+    user_setting = UserSetting.query.get(user_id)
+        # Nếu có setting và cột ai_suggestions đang là 0 (Tắt)
+    if user_setting and user_setting.ai_suggestions == 0:
+        return jsonify({
+            'status': 'disabled',
+            'message': 'Tính năng AI đang bị tắt.'
+        })
     # 1. Lấy dữ liệu tổng quan tháng này
     today = datetime.today()
     first_day = today.replace(day=1)
