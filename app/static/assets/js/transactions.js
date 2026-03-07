@@ -163,7 +163,7 @@ function renderList(data) {
                 </span>
             </div>
             <div class="item-amount ${amountClass}">
-                ${sign} ${parseInt(t.amount).toLocaleString('vi-VN')} đ
+                ${sign} ${formatMoney(Math.abs(t.amount))}
             </div>
             <div class="action-buttons">
                 <button class="btn-action btn-edit" onclick="startEdit('${t.id}')" title="Sửa"><i class="fas fa-edit"></i></button>

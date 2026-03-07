@@ -2,6 +2,23 @@ from flask import Blueprint, render_template, session, redirect, url_for
 from app.utils import login_required
 
 views_bp = Blueprint('views', __name__)
+from flask import session
+from app.models import User
+
+# ========================================================
+# TRẠM PHÁT SÓNG TOÀN CỤC: Bơm biến 'user' vào MỌI file HTML
+# ========================================================
+@views_bp.app_context_processor
+def inject_user():
+    # Kiểm tra nếu người dùng đã đăng nhập (có user_id trong session)
+    if 'user_id' in session:
+        # Tìm user trong Database
+        current_user = User.query.get(session['user_id'])
+        # Trả về biến tên là 'user' để tất cả file HTML đều dùng được
+        return dict(user=current_user)
+    
+    # Nếu chưa đăng nhập, trả về user là rỗng
+    return dict(user=None)
 
 @views_bp.route('/dashboard')
 @login_required

@@ -22,7 +22,7 @@ async function loadWalletsTable() {
             tr.innerHTML = `
                 <td>${w.TenNguonTien}</td>
                 <td>${w.LoaiNguonTien}</td>
-                <td style="font-weight: bold; color: #2980b9;">${parseInt(w.SoDu).toLocaleString()} đ</td>
+                <td style="font-weight: bold; color: #2980b9;">${formatMoney(w.SoDu)}</td>
                 <td style="text-align: right;">
                     <button  class="btn-action btn-edit" onclick="openEditWallet('${w.MaNguonTien}')">
                         <i class="fas fa-edit"></i>

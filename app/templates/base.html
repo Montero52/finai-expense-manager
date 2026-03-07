@@ -16,6 +16,28 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='assets/css/dashboard.css') }}">
     
     {% block extra_css %}{% endblock %}
+    
+    <script>
+        // 1. Lấy biến tiền tệ từ DB
+        window.USER_CURRENCY = "{% if user and user.settings %}{{ user.settings.currency }}{% else %}VND{% endif %}";
+        
+        // 2. Xác định Locale (Vùng)
+        window.USER_LOCALE = window.USER_CURRENCY === 'USD' ? 'en-US' : 'vi-VN';
+
+        // 3. Khởi tạo bộ định dạng dùng chung cho toàn hệ thống
+        const globalFormatter = new Intl.NumberFormat(window.USER_LOCALE, {
+            style: 'currency',
+            currency: window.USER_CURRENCY,
+            currencyDisplay: 'symbol',
+            maximumFractionDigits: window.USER_CURRENCY === 'VND' ? 0 : 2
+        });
+
+        // 4. TẠO HÀM TOÀN CỤC: Bất kỳ file JS nào cũng gọi được hàm này
+        window.formatMoney = function(amount) {
+            // Ép kiểu về số (float) đề phòng data truyền vào là chuỗi
+            return globalFormatter.format(parseFloat(amount));
+        };
+    </script>
 </head>
 <body>
     {% include 'components/sidebar.html' %}
@@ -31,6 +53,6 @@
     
     {% block scripts %}{% endblock %}
     <script src="{{ url_for('static', filename='assets/js/chatbot.js') }}"></script>
+    </body>
+</html> 
 
-</body>
-</html>

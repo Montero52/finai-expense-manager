@@ -1,5 +1,19 @@
-// Hàm định dạng tiền tệ
-const formatter = new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' });
+// ==========================================
+// HỆ THỐNG ĐỊNH DẠNG TIỀN TỆ THÔNG MINH
+// ==========================================
+// 1. Lấy loại tiền tệ từ base.html truyền sang
+const userCurrency = window.USER_CURRENCY || 'VND';
+
+// 2. Xác định quốc gia để hiển thị dấu phẩy/chấm cho đúng chuẩn
+const userLocale = userCurrency === 'USD' ? 'en-US' : 'vi-VN';
+
+// 3. Cấu hình bộ định dạng
+const formatter = new Intl.NumberFormat(userLocale, {
+    style: 'currency',
+    currency: userCurrency,
+    currencyDisplay: 'symbol', // Hiện ký hiệu ngắn gọn (₫ hoặc $) thay vì chữ (VND/USD)
+    maximumFractionDigits: userCurrency === 'VND' ? 0 : 2 // Mẹo: Tiền Việt thì chặt bỏ số 0 thập phân cho gọn, tiền Đô thì giữ lại 2 số
+});
 
 document.addEventListener('DOMContentLoaded', function() {
     loadWallets();

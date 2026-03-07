@@ -12,10 +12,10 @@ document.addEventListener("DOMContentLoaded", function() {
         modal.style.display = 'none'; 
     };
 
-    // --- Core Logic ---
-    function formatMoney(amount) {
-        return new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(amount);
-    }
+    // // --- Core Logic ---
+    // function formatMoney(amount) {
+    //     return new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(amount);
+    // }
 
     // Tải danh mục vào Modal
     async function loadCategoriesForModal() {

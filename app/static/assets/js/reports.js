@@ -5,12 +5,6 @@ let myPieChart = null;
 let myBarChart = null;
 let myLineChart = null;
 
-// Hàm định dạng tiền tệ Việt Nam (Helper)
-const formatter = new Intl.NumberFormat('vi-VN', {
-    style: 'currency',
-    currency: 'VND',
-});
-
 // ============================================================
 // 1. HÀM TẢI DỮ LIỆU TỪ BACKEND (API)
 // ============================================================
@@ -73,8 +67,8 @@ function renderPieChart(data) {
                             if (label) {
                                 label += ': ';
                             }
-                            label += formatter.format(context.raw);
-                            return label;
+                            label += formatMoney(context.raw);
+                            return formatMoney(value);
                         }
                     }
                 }
@@ -110,7 +104,7 @@ function renderBarChart(data) {
                 y: { 
                     beginAtZero: true,
                     ticks: {
-                        callback: function(value) { return formatter.format(value); }
+                        callback: function(value) { return formatMoney(value); }
                     }
                 } 
             },
@@ -119,7 +113,7 @@ function renderBarChart(data) {
                 tooltip: {
                     callbacks: {
                         label: function(context) {
-                            return formatter.format(context.raw);
+                            return formatMoney(value);
                         }
                     }
                 }
@@ -154,7 +148,7 @@ function renderLineChart(data) {
                 y: { 
                     beginAtZero: true,
                     ticks: {
-                        callback: function(value) { return formatter.format(value); }
+                        callback: function(value) { return formatMoney(value); }
                     }
                 } 
             },
@@ -163,7 +157,7 @@ function renderLineChart(data) {
                 tooltip: {
                     callbacks: {
                         label: function(context) {
-                            return context.dataset.label + ': ' + formatter.format(context.raw);
+                            return context.dataset.label + ': ' + formatMoney(value);
                         }
                     }
                 }
@@ -198,7 +192,7 @@ function renderTopSpendingTable(items) {
                     <i class="fas fa-circle" style="color: ${rowColor}; font-size: 8px; margin-right: 5px;"></i> 
                     ${item.category}
                 </td>
-                <td style="font-weight: 600;">${item.amount_formatted}</td>
+                <td style="font-weight: 600;">${formatMoney(item.amount)}</td>
                 <td>
                     <div class="progress-bar-table">
                         <div class="progress-bar-fill" 
