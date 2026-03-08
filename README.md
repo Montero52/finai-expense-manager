@@ -1,169 +1,120 @@
-# FinAI - Intelligent Expense Manager
+# FinAI | Intelligent Expense Manager
 
-> **Full-stack Personal Finance App powered by Google Gemini 2.0 & RAG**
+[![Python 3.11+](https://img.shields.io/badge/python-3.11+-blue.svg)](https://www.python.org/)
+[![Gemini 2.0 Flash](https://img.shields.io/badge/AI-Gemini_2.0_Flash-8E44AD.svg)](https://aistudio.google.com/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](https://opensource.org/licenses/MIT)
+[![Flask](https://img.shields.io/badge/Framework-Flask-lightgrey.svg)](https://flask.palletsprojects.com/)
+[![Chart.js](https://img.shields.io/badge/Frontend-Chart.js-ff6384.svg)](https://www.chartjs.org/)
 
-![Python](https://img.shields.io/badge/Python-3.11%2B-blue?style=for-the-badge&logo=python&logoColor=white)
-![Flask](https://img.shields.io/badge/Flask-Web_App-000000?style=for-the-badge&logo=flask&logoColor=white)
-![Gemini AI](https://img.shields.io/badge/AI-Gemini_2.0_Flash-8E44AD?style=for-the-badge&logo=google-bard&logoColor=white)
-![Pandas](https://img.shields.io/badge/Data-Pandas-150458?style=for-the-badge&logo=pandas&logoColor=white)
-![SQLAlchemy](https://img.shields.io/badge/ORM-SQLAlchemy-D70206?style=for-the-badge&logo=sqlalchemy&logoColor=white)
-![Bootstrap](https://img.shields.io/badge/Frontend-Bootstrap_5-7952B3?style=for-the-badge&logo=bootstrap&logoColor=white)
+An intelligent personal finance solution that transforms natural language inputs into structured financial data, optimized with dynamic multi-currency handling and RAG-based AI assistance.
 
-## Introduction
-
-**FinAI** is a smart personal finance management web application designed to simplify expense tracking using Artificial Intelligence. Unlike traditional apps that require tedious manual entry, FinAI integrates **Google Gemini 2.0 Flash** to automatically categorize transactions and provide real-time financial advice via an interactive chatbot.
-
-### Project Status
-
-> **Current Stage: MVP (Minimum Viable Product)**
-> This project is currently under active development. While the core AI and transaction tracking modules are fully functional, several features (Budgeting, Advanced Admin Analytics) are in the prototyping phase. Please refer to the **Work in Progress** section below for details.
+<!-- <div align="center">
+  <img src="assets/images/finai-demo.gif" width="750" alt="FinAI Demo">
+  <p><i>AI-powered expense tracking, auto-categorization, and real-time cash flow analytics</i></p>
+</div> -->
 
 ---
+## Project Overview
+FinAI revolutionizes manual expense tracking by acting as a smart financial assistant. The system effectively mitigates tedious data entry by implementing **Natural Language Processing (NLP)** to extract transaction details automatically. Engineered for modern web experiences, it seamlessly blends traditional CRUD financial operations with advanced **Retrieval Augmented Generation (RAG)** capabilities.
 
-## Key Features (Implemented)
+## Key Technical Highlights
+### 1. Global Multi-Currency Architecture
+* **Base Currency System:** Maintains absolute data integrity by storing all financial records in a unified Base Currency (VND) within the SQLite database.
+* **Dynamic Two-Way Conversion:** Seamlessly converts inputs and formats display values (USD/VND) in real-time across all dashboards, charts, and HTML input forms without altering raw DB values.
 
-### 1. AI-Powered Features (Gemini 2.0)
+### 2. AI-Powered NLP & RAG Pipeline
+* **Zero-Click Categorization:** Parses natural language (e.g., "Dinner with friends 500k") to automatically extract amounts, infer context, and assign custom categories.
+* **Context-Aware Chatbot:** Interrogates actual wallet balances and historical transaction data using RAG to provide personalized financial advice and anomaly warnings.
 
-* **Smart NLP Categorization:** Users can type natural descriptions (e.g., *"Dinner with friends 500k"*), and the AI automatically detects the category (Dining) and processes the amount without manual selection.
-* **Context-Aware Chatbot (RAG):** A built-in assistant that answers questions based on actual wallet balances and transaction history (Retrieval Augmented Generation).
-* **Spending Insights:** The AI analyzes transactions to provide warnings or advice directly within the chat interface.
+### 3. Production-Grade Financial Engine
+* **Dynamic Visualizations:** Integrates Chart.js for interactive Pie, Bar, and Line charts to track cash flow trends with localized currency formatting.
+* **Budget Enforcement:** Real-time progress tracking, spatial logic for expense distribution, and deadline countdowns for strict budget management.
+* **Batch Exporting:** Automated pipeline using Pandas to transcode historical data into native `.xlsx` or print-friendly PDF formats.
 
-### 2. Core Finance Management
+## Roadmap (Upcoming Features)
 
-* **Multi-Wallet System:** Manage multiple sources of funds including Cash, Bank Accounts, and Credit Cards.
-* **Visual Reports:** Interactive charts (Pie, Bar, Line) powered by **Chart.js** to visualize cash flow over time.
-* **Data Export:**
-* Export transaction history to Excel (`.xlsx`) for offline analysis.
-* Generate Print-friendly Reports (HTML/PDF view) for monthly reviews.
+The core MVP is fully operational. The following modules are in the active development pipeline:
 
----
-
-## Work in Progress (Incomplete Features)
-
-The following modules are visible in the user interface but are currently partially implemented or under construction:
-
-* **Budgeting Module:** The UI for setting monthly budget limits exists, but the backend logic for enforcing limits and alerts is currently **not connected**.
-* **Foundations (Knowledge Hub):** A section designed for financial literacy articles. Currently serves as a placeholder for future content integration.
-* **Admin Analytics:** The Admin Dashboard supports User Management (RBAC), but system-wide analytics charts are currently being developed.
-
----
+- [ ] **Admin Dashboard:** System-wide analytics, user management, and Role-Based Access Control (RBAC).
+- [ ] **AI Quota Monitoring:** A dashboard to track Gemini API usage limits and prevent rate-limiting.
+- [ ] **Advanced Budget Alerts:** Automated email/Telegram notifications when a user reaches 80% or 100% of their budget.
+- [ ] **Database Migration:** Upgrading from SQLite to PostgreSQL for production readiness.
 
 ## Tech Stack
+* **Core AI:** Google Gemini 2.0 Flash, RAG Architecture.
+* **Backend:** Python, Flask, SQLAlchemy ORM.
+* **Processing:** Pandas, Global JS `Intl.NumberFormat` implementations.
+* **Storage:** SQLite (Transactional DB).
+* **Frontend:** HTML5, CSS3, Vanilla JS, Bootstrap 5, Chart.js.
 
-| Component | Technology |
-| --- | --- |
-| **Backend** | Python 3.11, Flask (Web Framework) |
-| **Database** | SQLAlchemy (ORM), SQLite (Default) |
-| **AI & LLM** | Google Generative AI SDK (`gemini-2.0-flash`) |
-| **Data Processing** | Pandas (Dataframes, Excel Export) |
-| **Frontend** | HTML5, CSS3, JavaScript, Bootstrap 5, Chart.js |
-| **Utilities** | Flask-Mail (Notifications), Dotenv (Config) |
+## Project Structure
+```text
+finai-expense-manager/
+├── app/
+│   ├── models.py        # SQLAlchemy Database Schemas
+│   ├── routes/          # Flask Blueprints (Auth, Dashboard, API)
+│   ├── static/          # Frontend assets (CSS, JS logic, Icons)
+│   └── templates/       # Jinja2 Web UI templates (HTML)
+├── assets/images/       # Project demonstrations (GIFs/Images)
+├── data/                # Local SQLite database
+├── .env.example         # Environment variables template
+├── app.py               # Main entry point & Flask initialization
+├── create_admin.py      # Utility script for DB initialization
+└── requirements.txt     # Project dependencies
+```
 
----
+## Quick Start
 
-## Installation & Setup
+### 1. Prerequisites
 
-**1. Clone the repository**
+* **Python 3.11+**
+* **Google Gemini API Key** (Required for NLP Categorization and Chatbot features)
+
+### 2. Installation
 
 ```bash
+# Clone the repository
 git clone https://github.com/Montero52/finai-expense-manager.git
 cd finai-expense-manager
-```
 
-**2. Create a Virtual Environment**
-
-```bash
+# Setup Virtual Environment
 python -m venv venv
+source venv/bin/activate # Windows: venv\Scripts\activate
 
-# Windows:
-venv\Scripts\activate
-
-# Mac/Linux:
-source venv/bin/activate
-```
-
-**3. Install Dependencies**
-
-```bash
+# Install Dependencies
 pip install -r requirements.txt
 ```
 
-**4. Configure Environment Variables**
-Create a `.env` file in the root directory and add your keys (Database path is configured automatically in `config.py`):
+### 3. Configuration
+
+Create a `.env` file in the root directory and add your credentials:
 
 ```env
-# Security Key
-SECRET_KEY=your_secret_key_here
-
-# Google Gemini AI Key (Required)
-GEMINI_API_KEY=your_google_gemini_api_key_here
-
-# Email Configuration (For Reset Password)
-MAIL_USERNAME=your_email@gmail.com
-MAIL_PASSWORD=your_app_password
+SECRET_KEY=your_secure_secret_key
+GEMINI_API_KEY=your_google_ai_studio_api_key
 ```
 
-**Important Notes:**
-
-* **AI Key:** You need a valid Google AI Studio API Key to enable Chatbot & Categorization features.
-* **Database:** No configuration needed. The SQLite database is automatically created at `instance/quanlychitieu.db` upon startup.
-
-
-**5. Create Admin Account**
-Run the setup script to initialize a superuser account for system management:
+### 4. Database Setup & Launch
 
 ```bash
+# Initialize the database and create default roles
 python create_admin.py
+
+# Launch the Dashboard
+python app.py
 ```
 
-**Default Credentials:**
+*The application will be available at `http://127.0.0.1:5000`.*
 
-* **Email:** `admin@finance.com`
-* **Password:** `admin123`
+<!-- ## License
 
-**6. Run the Application**
+This project is licensed under the **MIT License**. It is free to use for academic and personal purposes. See the [LICENSE](https://www.google.com/search?q=LICENSE) file for the full license text. -->
 
-```bash
-python run.py
-```
+## Author
 
-Access the app at: `http://127.0.0.1:5000`
+**Trần Nhật Quý** *Lead Developer & Maintainer* | [LinkedIn](https://www.linkedin.com/in/trannhatquy) | [GitHub](https://github.com/Montero52) | [trannhatquy0@gmail.com]()
 
----
+* **Personal Extensions (v2.0+):** Independently developed and integrated the **Gemini 2.0 Flash AI**, designed the **Global Multi-Currency Architecture**, built the **RAG Chatbot**, and fully refactored the UI/UX & codebase from the original foundation.
 
-## Roadmap & Limitations
-
-**Current Limitations:**
-
-* **Fixed AI Categories:** Currently, the AI maps transactions to a fixed set of categories (e.g., Food, Transport). Future versions will support user-defined dynamic categories.
-* **Mobile Responsiveness:** The dashboard is optimized for Desktop view.
-* **AI Latency:** Response times depend on the Google Gemini API (approx. 2-5 seconds).
-
-**Future Development:**
-
-* [ ] Implement backend logic for Budgeting Module.
-* [ ] Integrate OCR for receipt scanning.
-* [ ] Deploy to cloud platforms (AWS/Render).
-
----
-
-## Authors & Acknowledgments
-
-**Lead Developer & Maintainer:**
-
-* **Trần Nhật Quý** ([@Montero52](https://github.com/Montero52))
-* **Role:** Full-stack Development, AI Integration (Gemini/RAG), System Architecture.
-* **Contact:** [trannhatquy0@gmail.com](mailto:trannhatquy0@gmail.com) | [LinkedIn](https://www.linkedin.com/in/trannhatquy)
-
-**Original Contributors (Capstone Project Team):**
-*This project originated as a Graduation Thesis at Duy Tan University. Special thanks to the initial development team:*
-
-* Hồ Hữu Quang Sang
-* Phạm Văn Nhật Trường
-* Võ Kiều Trang
-* Nguyễn Phi Hùng
-* Nguyễn Võ Gia Huy
-
----
-
-> **Note:** This project is developed for educational and research purposes. The current repository serves as an extended version maintained by **Trần Nhật Quý** for personal portfolio and further AI research.
+**Original Capstone Team (v1.0):**
+* FinAI originated as a Graduation Thesis at Duy Tan University. Special thanks to the initial development team for building the core foundation: *Hồ Hữu Quang Sang, Phạm Văn Nhật Trường, Võ Kiều Trang, Nguyễn Phi Hùng, Nguyễn Võ Gia Huy*.
