@@ -105,3 +105,34 @@ def ai_monitoring():
 
     return render_template('admin/ai_monitoring.html', logs=logs_query)
 
+
+@admin_bp.route('/admin/chatbot-logs')
+@admin_required
+def chatbot_logs():
+    # Lấy toàn bộ lịch sử chat kèm thông tin user, sắp xếp cũ -> mới (để hiện chat từ trên xuống)
+    logs_query = db.session.query(ChatbotLog, User)\
+        .join(User, ChatbotLog.user_id == User.id)\
+        .order_by(ChatbotLog.created_at.asc()).all()
+
+    conversations = {}
+    for log, user in logs_query:
+        if user.id not in conversations:
+            conversations[user.id] = {
+                'user_id': user.id,
+                'user_name': user.name,
+                'logs': [],
+                'latest_time': log.created_at,
+                'snippet': ''
+            }
+        # Thêm tin nhắn vào mảng logs của người dùng này
+        conversations[user.id]['logs'].append(log)
+        # Cập nhật thời gian và đoạn trích dẫn mới nhất
+        conversations[user.id]['latest_time'] = log.created_at
+        
+        snippet = log.question if log.question else ''
+        conversations[user.id]['snippet'] = (snippet[:25] + '...') if len(snippet) > 25 else snippet
+
+    # Sắp xếp lại danh sách bên trái: Ai nhắn gần đây nhất thì lên đầu (Mới -> Cũ)
+    sorted_convos = sorted(conversations.values(), key=lambda x: x['latest_time'], reverse=True)
+
+    return render_template('admin/chatbot_logs.html', conversations=sorted_convos)

@@ -2,51 +2,73 @@
 
 {% block title %}Lịch sử Chatbot - Admin Panel{% endblock %}
 
-{% block css %}
-    <link rel="stylesheet" href="{{ url_for('static', filename='assets/css/admin.css') }}">
-{% endblock %}
-
 {% block content %}
-    <header class="main-header">
-        <h1>Lịch sử Chatbot</h1>
-        <p>Xem lại các cuộc hội thoại của người dùng.</p>
+    <header class="main-header with-button">
+        <div>
+            <h1>Lịch sử Chatbot</h1>
+            <p>Xem lại các cuộc hội thoại giữa người dùng và trợ lý ảo FinAI.</p>
+        </div>
+        <div class="header-buttons">
+            <button class="btn btn-danger" onclick="cleanupLogs()" title="Xóa tin nhắn cũ hơn 30 ngày">
+                <i class="fas fa-trash-alt"></i> Dọn dẹp Log cũ
+            </button>
+        </div>
     </header>
 
     <div class="widget" style="padding: 0; overflow: hidden; display: flex; flex-direction: column;">
         <div class="chat-log-wrapper" style="border: none; border-radius: 0; height: 650px;">
             
             <div class="conversation-list">
-                <div class="list-header">Cuộc hội thoại gần đây</div>
+                <div class="list-header"><i class="fas fa-comments"></i> Cuộc hội thoại gần đây</div>
                 <ul>
-                    <li class="conversation-item active">
-                        <div class="convo-user">Trần Nhật Quý (ID: 1)</div>
-                        <div class="convo-snippet">Bot: Chi tiêu tháng này của bạn...</div>
-                        <div class="convo-time">10 phút trước</div>
+                    {% for convo in conversations %}
+                    <li class="conversation-item" id="nav-user-{{ convo.user_id }}" onclick="switchChat('{{ convo.user_id }}', '{{ convo.user_name }}')">
+                        <div class="convo-user">{{ convo.user_name }} 
+                            <span style="font-size: 0.75rem; color: #999; font-weight: normal;">(ID: {{ convo.user_id }})</span>
+                        </div>
+                        <div class="convo-snippet">User: {{ convo.snippet }}</div>
+                        <div class="convo-time">{{ convo.latest_time.strftime('%d/%m %H:%M') if convo.latest_time else '' }}</div>
                     </li>
-                    <li class="conversation-item">
-                        <div class="convo-user">Nguyễn Văn A (ID: 2)</div>
-                        <div class="convo-snippet">User: Cho tôi xem báo cáo...</div>
-                        <div class="convo-time">1 giờ trước</div>
-                    </li>
+                    {% else %}
+                    <li style="padding: 20px; text-align: center; color: #999;">Chưa có dữ liệu chat nào.</li>
+                    {% endfor %}
                 </ul>
             </div>
 
             <div class="chat-display">
-                <div class="chat-header" style="border-bottom: 1px solid #eee;">
-                    <strong>Chi tiết hội thoại:</strong> Trần Nhật Quý
+                <div class="chat-header" style="border-bottom: 1px solid #eee; background: #fff;">
+                    <strong>Chi tiết hội thoại:</strong> <span id="current-chat-user" style="color: #3498db;">Chọn một người dùng bên trái</span>
                 </div>
-                <div class="chat-body">
-                    <div class="chat-message message-user">
-                        <div class="message-bubble">Chào bot, xem giúp tôi ví tiền mặt.</div>
-                        <div class="message-time">10:28</div>
+                
+                <div class="chat-body" id="chat-body-container">
+                    
+                    {% for convo in conversations %}
+                    <div class="chat-content-pane" id="chat-pane-{{ convo.user_id }}" style="display: none;">
+                        {% for log in convo.logs %}
+                            <div class="chat-message message-user">
+                                <div class="message-bubble">{{ log.question }}</div>
+                                <div class="message-time">{{ log.created_at.strftime('%H:%M - %d/%m/%Y') }}</div>
+                            </div>
+                            <div class="chat-message message-bot">
+                                <div class="message-bubble">{{ log.answer|safe }}</div>
+                                <div class="message-time">{{ log.created_at.strftime('%H:%M - %d/%m/%Y') }}</div>
+                            </div>
+                        {% endfor %}
                     </div>
-                    <div class="chat-message message-bot">
-                        <div class="message-bubble">Ví tiền mặt của bạn hiện có 5.000.000đ.</div>
-                        <div class="message-time">10:29</div>
+                    {% endfor %}
+                    
+                    <div id="empty-chat-state" style="display: flex; height: 100%; align-items: center; justify-content: center; color: #aaa; flex-direction: column;">
+                        <i class="fas fa-robot" style="font-size: 4rem; margin-bottom: 15px; color: #ddd;"></i>
+                        <p>Chọn một cuộc hội thoại để xem chi tiết</p>
                     </div>
+
                 </div>
             </div>
 
         </div> 
     </div>
+{% endblock %}
+
+{% block scripts %}
+    <script src="{{ url_for('static', filename='assets/js/admin_chatbot_logs.js') }}"></script>
 {% endblock %}
