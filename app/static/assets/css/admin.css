@@ -277,7 +277,9 @@ body {
     font-weight: 600;
     font-size: 14px;
     transition: background-color 0.3s;
-    width: 110px;
+    min-width: 115px; 
+    width: auto; 
+    white-space: nowrap;
     text-align: left;
 }
 .status-toggle .fas { margin-right: 6px; }
@@ -297,6 +299,29 @@ body {
     background-color: #ecf0f1;
     color: #27ae60;
     border: 1px solid #27ae60;
+}
+
+/* Bổ sung Badge trạng thái Bị khóa */
+.status-badge.status-disabled {
+    background-color: #fdeaea;
+    color: #e74a3b;
+    border: 1px solid #e74a3b;
+}
+
+/* Bổ sung style cho Dropdown chọn quyền */
+.role-select {
+    padding: 6px 10px;
+    border: 1px solid #dfe6e9;
+    border-radius: 5px;
+    font-family: inherit;
+    font-weight: 500;
+    color: #333;
+    outline: none;
+    transition: 0.3s;
+}
+.role-select:focus {
+    border-color: #3498db;
+    box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
 }
 
 /* --- 2. Trang Quản lý Danh mục (categories.html) --- */

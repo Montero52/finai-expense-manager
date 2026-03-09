@@ -9,7 +9,7 @@
 {% block content %}
     <header class="main-header">
         <h1>Quản lý Người dùng</h1>
-        <p>Quản lý vai trò và trạng thái của tất cả người dùng trong hệ thống.</p>
+        <p>Kiểm soát phân quyền và trạng thái hoạt động của các tài khoản.</p>
     </header>
 
     <div class="widget">
@@ -19,28 +19,50 @@
                     <th>ID</th>
                     <th>Email</th>
                     <th>Họ Tên</th>
+                    <th>Ngày Tham Gia</th>
                     <th>Vai Trò</th>
                     <th>Trạng Thái</th>
+                    <th style="text-align: right;">Hành Động</th>
                 </tr>
             </thead>
             <tbody>
                 {% for user in users %}
                 <tr>
-                    <td>{{ user.id }}</td>
+                    <td><code>{{ user.id }}</code></td>
                     <td>{{ user.email }}</td>
-                    <td>{{ user.name }}</td>
+                    <td><strong>{{ user.name }}</strong></td>
+                    
+                    <td>{{ user.created_at.strftime('%d/%m/%Y') if user.created_at else 'N/A' }}</td>
+                    
                     <td>
-                        <select {% if user.role == 'admin' %}disabled{% endif %} 
-                                style="padding: 5px; border-radius: 4px; border: 1px solid #ddd;">
+                        <select class="role-select" 
+                                onchange="updateUserRole('{{ user.id }}', this.value)"
+                                {% if user.id == session.get('user_id') %}disabled title="Không thể tự đổi quyền của mình"{% endif %}>
                             <option value="user" {% if user.role == 'user' %}selected{% endif %}>User</option>
                             <option value="admin" {% if user.role == 'admin' %}selected{% endif %}>Admin</option>
                         </select>
                     </td>
+                    
                     <td>
                         {% if user.status == 1 %}
-                            <span class="status-badge status-active">Active</span>
+                            <span class="status-badge status-active">Hoạt động</span>
                         {% else %}
-                            <span class="status-badge status-disabled">Disabled</span>
+                            <span class="status-badge status-disabled">Bị khóa</span>
+                        {% endif %}
+                    </td>
+
+                    <td style="text-align: right;">
+                        {% if user.id == session.get('user_id') %}
+                            <span style="color: #999; font-style: italic; font-size: 0.85rem;">Đang đăng nhập</span>
+                        {% else %}
+                            <button class="status-toggle {% if user.status == 1 %}disabled{% else %}active{% endif %}"
+                                    onclick="toggleUserStatus('{{ user.id }}', {{ user.status }})">
+                                {% if user.status == 1 %}
+                                    <i class="fas fa-lock"></i> Khóa
+                                {% else %}
+                                    <i class="fas fa-unlock"></i> Mở khóa
+                                {% endif %}
+                            </button>
                         {% endif %}
                     </td>
                 </tr>
@@ -48,4 +70,8 @@
             </tbody>
         </table>
     </div>
+{% endblock %}
+
+{% block scripts %}
+    <script src="{{ url_for('static', filename='assets/js/admin_users.js') }}"></script>
 {% endblock %}
