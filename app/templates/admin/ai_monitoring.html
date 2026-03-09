@@ -2,14 +2,10 @@
 
 {% block title %}Giám sát AI - Admin Panel{% endblock %}
 
-{% block css %}
-    <link rel="stylesheet" href="{{ url_for('static', filename='assets/css/admin.css') }}">
-{% endblock %}
-
 {% block content %}
     <header class="main-header">
         <h1>Giám sát AI</h1>
-        <p>Đánh giá hiệu quả và độ chính xác của mô hình.</p>
+        <p>Đánh giá hiệu quả và độ chính xác của mô hình ngôn ngữ Gemini.</p>
     </header>
 
     <div class="widget">
@@ -33,22 +29,33 @@
                     <th>Thời gian</th>
                 </tr>
             </thead>
-            <tbody>
-                <tr class="log-correct">
-                    <td>Cà phê Highland</td>
-                    <td class="col-ai-guess">Ăn uống</td>
-                    <td class="col-user-choice">Ăn uống</td>
-                    <td><span class="result-badge result-correct"><i class="fas fa-check"></i> Đúng</span></td>
-                    <td>14/11/2025 15:30</td>
-                </tr>
-                <tr class="log-incorrect">
-                    <td>Grab về nhà</td>
-                    <td class="col-ai-guess">Mua sắm</td>
-                    <td class="col-user-choice">Đi lại</td>
-                    <td><span class="result-badge result-incorrect"><i class="fas fa-times"></i> Sai</span></td>
-                    <td>14/11/2025 12:15</td>
-                </tr>
+            <tbody id="ai-log-body">
+                {% for log, description, predicted_name, actual_name in logs %}
+                    {% set is_correct = (log.feedback == 'dung') %}
+                    
+                    <tr class="log-row {{ 'log-correct' if is_correct else 'log-incorrect' }}">
+                        <td><strong>{{ description or 'Không có mô tả' }}</strong></td>
+                        <td class="col-ai-guess">{{ predicted_name or 'N/A' }}</td>
+                        <td class="col-user-choice">{{ actual_name or 'N/A' }}</td>
+                        <td>
+                            {% if is_correct %}
+                                <span class="result-badge result-correct"><i class="fas fa-check"></i> Đúng</span>
+                            {% else %}
+                                <span class="result-badge result-incorrect"><i class="fas fa-times"></i> Sai</span>
+                            {% endif %}
+                        </td>
+                        <td>{{ log.created_at.strftime('%d/%m/%Y %H:%M') if log.created_at else '' }}</td>
+                    </tr>
+                {% else %}
+                    <tr>
+                        <td colspan="5" style="text-align: center; padding: 20px; color: #7f8c8d;">Chưa có dữ liệu dự đoán AI nào.</td>
+                    </tr>
+                {% endfor %}
             </tbody>
         </table>
     </div>
+{% endblock %}
+
+{% block scripts %}
+    <script src="{{ url_for('static', filename='assets/js/admin_ai_monitoring.js') }}"></script>
 {% endblock %}
