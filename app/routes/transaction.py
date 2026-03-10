@@ -1,10 +1,10 @@
-import uuid
 from datetime import datetime
 from flask import Blueprint, request, session, jsonify
 
 from app import db
 from app.models import Transaction, Wallet
 from app.utils import api_login_required
+from decimal import Decimal
 
 transaction_bp = Blueprint('transaction', __name__)
 
@@ -38,7 +38,7 @@ def add_transaction():
     try:
         trans_type = data.get('type')
         db_type = {'expense': 'chi', 'income': 'thu', 'transfer': 'chuyen'}.get(trans_type, 'chi')
-        amount = float(data.get('amount', 0))
+        amount = Decimal(str(data.get('amount')))
         
         source_id = data.get('source_wallet_id')
         dest_id = data.get('dest_wallet_id')
@@ -49,7 +49,6 @@ def add_transaction():
             return jsonify({'status': 'error', 'message': 'Chưa chọn ví'}), 400
 
         new_trans = Transaction(
-            id=str(uuid.uuid4())[:8],
             user_id=user_id,
             wallet_id=final_wallet_id,
             dest_wallet_id=final_dest_id,
@@ -104,7 +103,8 @@ def update_transaction(trans_id):
         # Cập nhật dữ liệu mới
         new_ui_type = data.get('type')
         t.type = {'expense': 'chi', 'income': 'thu', 'transfer': 'chuyen'}.get(new_ui_type, 'chi')
-        t.amount = float(data.get('amount', 0))
+        t.amount     = Decimal(data.get('amount'))
+        
         t.description = data.get('description')
         t.date = datetime.strptime(data.get('date'), '%Y-%m-%d')
         t.category_id = data.get('category_id')
