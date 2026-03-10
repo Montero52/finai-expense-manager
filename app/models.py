@@ -63,11 +63,11 @@ class Wallet(db.Model):
 class Category(db.Model):
     __tablename__ = 'danhmuc'
 
-    id = db.Column('MaDanhMuc', db.String(8), primary_key=True)
+    id = db.Column('MaDanhMuc', db.Integer, primary_key=True, autoincrement=True)
     user_id = db.Column('MaNguoiDung', db.String(8), db.ForeignKey('nguoidung.MaNguoiDung', ondelete='CASCADE'))
     name = db.Column('TenDanhMuc', db.String(100), nullable=False)
     type = db.Column('LoaiDanhMuc', db.String(10), nullable=False) # 'thu' hoặc 'chi'
-    parent_id = db.Column('MaDanhMucCha', db.String(8), db.ForeignKey('danhmuc.MaDanhMuc', ondelete='SET NULL'))
+    parent_id = db.Column('MaDanhMucCha', db.Integer, db.ForeignKey('danhmuc.MaDanhMuc', ondelete='SET NULL'))
 
     # Quan hệ đệ quy (Danh mục con)
     children = db.relationship('Category', backref=db.backref('parent', remote_side=[id]), lazy=True)

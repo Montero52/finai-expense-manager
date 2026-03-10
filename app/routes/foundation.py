@@ -4,6 +4,7 @@ from flask import Blueprint, request, session, jsonify
 from app import db
 from app.models import Wallet, Category
 from app.utils import api_login_required
+from sqlalchemy import or_
 
 foundation_bp = Blueprint('foundation', __name__)
 
@@ -51,21 +52,21 @@ def modify_wallet(wallet_id):
 def manage_categories():
     user_id = session['user_id']
     if request.method == 'GET':
-        cats = Category.query.filter_by(user_id=user_id).all()
+        cats = Category.query.filter(or_(Category.user_id == user_id, Category.user_id == None)).all()
         return jsonify([{'MaDanhMuc': c.id, 'TenDanhMuc': c.name, 'LoaiDanhMuc': c.type} for c in cats])
     
     if request.method == 'POST':
         data = request.json
         try:
             db.session.add(Category(
-                id=str(uuid.uuid4())[:8], user_id=user_id,
+                user_id=user_id,
                 name=data.get('name'), type=data.get('type')
             ))
             db.session.commit()
             return jsonify({'status': 'success'})
         except Exception as e: return jsonify({'status': 'error', 'message': str(e)}), 500
 
-@foundation_bp.route('/api/categories/<string:cat_id>', methods=['PUT', 'DELETE'])
+@foundation_bp.route('/api/categories/<int:cat_id>', methods=['PUT', 'DELETE'])
 @api_login_required
 def modify_category(cat_id):
     user_id = session['user_id']

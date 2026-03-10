@@ -27,11 +27,6 @@ def users():
     users = User.query.all()
     return render_template('admin/users.html', users=users)
 
-@admin_bp.route('/admin/categories')
-@admin_required
-def categories():
-    return render_template('admin/categories.html')
-
 # --- API Xóa Log ---
 @admin_bp.route('/api/admin/cleanup-logs', methods=['DELETE'])
 @admin_required
@@ -136,3 +131,54 @@ def chatbot_logs():
     sorted_convos = sorted(conversations.values(), key=lambda x: x['latest_time'], reverse=True)
 
     return render_template('admin/chatbot_logs.html', conversations=sorted_convos)
+
+# ==========================================
+# QUẢN LÝ DANH MỤC (CATEGORIES)
+# ==========================================
+
+@admin_bp.route('/admin/categories')
+@admin_required
+def categories():
+    # Chỉ trả về giao diện, dữ liệu sẽ do JS gọi API sau
+    return render_template('admin/categories.html')
+
+@admin_bp.route('/api/admin/categories', methods=['GET'])
+@admin_required
+def get_admin_categories():
+    # Lấy các danh mục mặc định (user_id là null)
+    categories = Category.query.filter(Category.user_id == None).all()
+    return jsonify([
+        {
+            "id": c.id,
+            "name": c.name,
+            "type": c.type # 'thu' hoặc 'chi'
+        } for c in categories
+    ])
+
+@admin_bp.route('/api/admin/categories', methods=['POST'])
+@admin_required
+def save_category():
+    data = request.json
+    cat_id = data.get('id')
+    name = data.get('name')
+    cat_type = data.get('type')
+
+    if cat_id: # Trường hợp SỬA
+        category = Category.query.get(cat_id)
+        if category:
+            category.name = name
+            category.type = cat_type
+    else: # Trường hợp THÊM MỚI
+        category = Category(name=name, type=cat_type, user_id=None)
+        db.session.add(category)
+    
+    db.session.commit()
+    return jsonify({"status": "success", "message": "Đã lưu danh mục"})
+
+@admin_bp.route('/api/admin/categories/<int:id>', methods=['DELETE'])
+@admin_required
+def delete_category(id):
+    category = Category.query.get_or_404(id)
+    db.session.delete(category)
+    db.session.commit()
+    return jsonify({"status": "success", "message": "Đã xóa danh mục"})
