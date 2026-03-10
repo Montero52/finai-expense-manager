@@ -80,7 +80,7 @@ def add_transaction():
         db.session.rollback()
         return jsonify({'status': 'error', 'message': str(e)}), 500
 
-@transaction_bp.route('/api/transactions/<string:trans_id>', methods=['PUT'])
+@transaction_bp.route('/api/transactions/<int:trans_id>', methods=['PUT'])
 @api_login_required
 def update_transaction(trans_id):
     data = request.json
@@ -131,7 +131,7 @@ def update_transaction(trans_id):
         db.session.rollback()
         return jsonify({'status': 'error', 'message': str(e)}), 500
 
-@transaction_bp.route('/api/transactions/<string:trans_id>', methods=['DELETE'])
+@transaction_bp.route('/api/transactions/<int:trans_id>', methods=['DELETE'])
 @api_login_required
 def delete_transaction(trans_id):
     try:
