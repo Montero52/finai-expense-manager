@@ -1,5 +1,3 @@
-# create_admin.py
-import uuid
 from app import app, db
 from app.models import User, UserSetting, Wallet
 
@@ -20,9 +18,7 @@ def create_admin():
 
         try:
             # 2. Tạo User Admin
-            user_id = str(uuid.uuid4())[:8]
             admin_user = User(
-                id=user_id,
                 name=ADMIN_NAME,
                 email=ADMIN_EMAIL,
                 role='admin',
@@ -32,13 +28,11 @@ def create_admin():
             db.session.add(admin_user)
 
             # 3. Tạo thiết lập mặc định
-            setting = UserSetting(user_id=user_id)
-            db.session.add(setting)
+            db.session.flush()
             
             # 4. Tạo ví mặc định cho Admin (để test)
             wallet = Wallet(
-                id=str(uuid.uuid4())[:8],
-                user_id=user_id,
+                user_id=admin_user.id,
                 name="Kho bạc Admin",
                 type="Tiền mặt",
                 balance=999999999

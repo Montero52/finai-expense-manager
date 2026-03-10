@@ -5,20 +5,19 @@ from werkzeug.security import generate_password_hash, check_password_hash
 # ==================================================
 # 1. BẢNG NGƯỜI DÙNG (CORE)
 # ==================================================
+
 class User(db.Model):
     __tablename__ = 'nguoidung'
 
-    id = db.Column('MaNguoiDung', db.String(8), primary_key=True)
+    id = db.Column('MaNguoiDung', db.Integer, primary_key=True, autoincrement=True)
     name = db.Column('HoTen', db.String(100))
-    email = db.Column('Email', db.String(100), unique=True, nullable=False)
+    email = db.Column('Email', db.String(100), unique=True, nullable=False, index=True)
     password_hash = db.Column('MatKhau', db.String(200), nullable=False)
     role = db.Column('VaiTro', db.String(20), default='user')  # 'user' hoặc 'admin'
     status = db.Column('TrangThai', db.Integer, default=1)
     created_at = db.Column('NgayTao', db.DateTime, default=datetime.now)
     last_login = db.Column('LanDangNhapCuoi', db.DateTime)
 
-    # --- QUAN HỆ (Relationships) ---
-    # Giúp truy cập dữ liệu liên quan dễ dàng: user.wallets, user.transactions...
     settings = db.relationship('UserSetting', backref='user', uselist=False, lazy=True)
     wallets = db.relationship('Wallet', backref='user', lazy=True)
     categories = db.relationship('Category', backref='user', lazy=True)
@@ -37,7 +36,7 @@ class User(db.Model):
 class UserSetting(db.Model):
     __tablename__ = 'thietlapnguoidung'
 
-    user_id = db.Column('MaNguoiDung', db.String(8), db.ForeignKey('nguoidung.MaNguoiDung', ondelete='CASCADE'), primary_key=True)
+    user_id = db.Column('MaNguoiDung', db.Integer, db.ForeignKey('nguoidung.MaNguoiDung', ondelete='CASCADE'), primary_key=True)
     currency = db.Column('DonViTienTe', db.String(10), default='VND')
     language = db.Column('NgonNgu', db.String(10), default='vi')
     notifications = db.Column('ThongBao', db.Integer, default=1)
@@ -47,53 +46,59 @@ class UserSetting(db.Model):
 # ==================================================
 # 3. BẢNG NGUỒN TIỀN (VÍ)
 # ==================================================
+
 class Wallet(db.Model):
     __tablename__ = 'nguontien'
 
-    id = db.Column('MaNguonTien', db.String(8), primary_key=True)
-    user_id = db.Column('MaNguoiDung', db.String(8), db.ForeignKey('nguoidung.MaNguoiDung', ondelete='CASCADE'), nullable=False)
+    id = db.Column('MaNguonTien', db.Integer, primary_key=True, autoincrement=True)
+    user_id = db.Column('MaNguoiDung', db.Integer, db.ForeignKey('nguoidung.MaNguoiDung', ondelete='CASCADE'), nullable=False, index=True)
     name = db.Column('TenNguonTien', db.String(100), nullable=False)
     type = db.Column('LoaiNguonTien', db.String(50)) # Tiền mặt, Ngân hàng...
-    balance = db.Column('SoDu', db.Float, default=0.0)
+    balance = db.Column('SoDu', db.Numeric(15, 2), default=0.0)
     created_at = db.Column('NgayTao', db.DateTime, default=datetime.now)
 
+    is_deleted = db.Column('DaXoa', db.Boolean, default=False)
+    
 # ==================================================
 # 4. BẢNG DANH MỤC
 # ==================================================
+
 class Category(db.Model):
     __tablename__ = 'danhmuc'
 
     id = db.Column('MaDanhMuc', db.Integer, primary_key=True, autoincrement=True)
-    user_id = db.Column('MaNguoiDung', db.String(8), db.ForeignKey('nguoidung.MaNguoiDung', ondelete='CASCADE'))
+    user_id = db.Column('MaNguoiDung', db.Integer, db.ForeignKey('nguoidung.MaNguoiDung', ondelete='CASCADE'), nullable=True)
     name = db.Column('TenDanhMuc', db.String(100), nullable=False)
     type = db.Column('LoaiDanhMuc', db.String(10), nullable=False) # 'thu' hoặc 'chi'
     parent_id = db.Column('MaDanhMucCha', db.Integer, db.ForeignKey('danhmuc.MaDanhMuc', ondelete='SET NULL'))
 
-    # Quan hệ đệ quy (Danh mục con)
-    children = db.relationship('Category', backref=db.backref('parent', remote_side=[id]), lazy=True)
+    is_deleted = db.Column('DaXoa', db.Boolean, default=False)
 
+    children = db.relationship('Category', backref=db.backref('parent', remote_side=[id]), lazy=True)
+    
 # ==================================================
 # 5. BẢNG GIAO DỊCH (Quan trọng nhất)
 # ==================================================
+
 class Transaction(db.Model):
     __tablename__ = 'giaodich'
 
-    id = db.Column('MaGiaoDich', db.String(8), primary_key=True)
-    user_id = db.Column('MaNguoiDung', db.String(8), db.ForeignKey('nguoidung.MaNguoiDung', ondelete='CASCADE'), nullable=False)
+    id = db.Column('MaGiaoDich', db.Integer, primary_key=True, autoincrement=True)
+    user_id = db.Column('MaNguoiDung', db.Integer, db.ForeignKey('nguoidung.MaNguoiDung', ondelete='CASCADE'), nullable=False, index=True)
     
-    wallet_id = db.Column('MaNguonTien', db.String(8), db.ForeignKey('nguontien.MaNguonTien'), nullable=False)
-    dest_wallet_id = db.Column('MaNguonTien_Dich', db.String(8), db.ForeignKey('nguontien.MaNguonTien'), nullable=True)
+    wallet_id = db.Column('MaNguonTien', db.Integer, db.ForeignKey('nguontien.MaNguonTien'), nullable=False, index=True)
+    dest_wallet_id = db.Column('MaNguonTien_Dich', db.Integer, db.ForeignKey('nguontien.MaNguonTien'), nullable=True)
     
-    category_id = db.Column('MaDanhMuc', db.String(8), db.ForeignKey('danhmuc.MaDanhMuc', ondelete='SET NULL'), nullable=True)
+    category_id = db.Column('MaDanhMuc', db.Integer, db.ForeignKey('danhmuc.MaDanhMuc', ondelete='SET NULL'), nullable=True, index=True)
     
     type = db.Column('LoaiGiaoDich', db.String(20), nullable=False) # 'thu', 'chi', 'chuyen'
-    amount = db.Column('SoTien', db.Float, nullable=False)
+    amount = db.Column('SoTien', db.Numeric(15, 2), nullable=False)
     description = db.Column('MoTa', db.String(255))
-    date = db.Column('NgayGiaoDich', db.Date, nullable=False)
+    date = db.Column('NgayGiaoDich', db.Date, nullable=False, index=True)
     created_at = db.Column('NgayTao', db.DateTime, default=datetime.now)
 
     # Các trường AI
-    ai_category_id = db.Column('MaDanhMuc_AI', db.String(8), db.ForeignKey('danhmuc.MaDanhMuc', ondelete='SET NULL'))
+    ai_category_id = db.Column('MaDanhMuc_AI', db.Integer, db.ForeignKey('danhmuc.MaDanhMuc', ondelete='SET NULL'))
     ai_confidence = db.Column('DoTinCay_AI', db.Float)
 
     # Quan hệ để lấy tên Ví/Danh mục trực tiếp (trans.wallet.name)
@@ -105,27 +110,25 @@ class Transaction(db.Model):
 # 6. BẢNG NGÂN SÁCH
 # ==================================================
 
-# 7. Bảng Trung gian Ngân sách - Danh mục
 budget_category = db.Table('ngansach_danhmuc',
-    db.Column('MaNganSach', db.String(8), db.ForeignKey('ngansach.MaNganSach', ondelete='CASCADE'), primary_key=True),
-    db.Column('MaDanhMuc', db.String(8), db.ForeignKey('danhmuc.MaDanhMuc', ondelete='CASCADE'), primary_key=True)
+    db.Column('MaNganSach', db.Integer, db.ForeignKey('ngansach.MaNganSach', ondelete='CASCADE'), primary_key=True),
+    db.Column('MaDanhMuc', db.Integer, db.ForeignKey('danhmuc.MaDanhMuc', ondelete='CASCADE'), primary_key=True)
 )
 
 class Budget(db.Model):
     __tablename__ = 'ngansach'
 
-    id = db.Column('MaNganSach', db.String(8), primary_key=True)
-    user_id = db.Column('MaNguoiDung', db.String(8), db.ForeignKey('nguoidung.MaNguoiDung', ondelete='CASCADE'), nullable=False)
+    id = db.Column('MaNganSach', db.Integer, primary_key=True, autoincrement=True)
+    user_id = db.Column('MaNguoiDung', db.Integer, db.ForeignKey('nguoidung.MaNguoiDung', ondelete='CASCADE'), nullable=False)
     name = db.Column('TenNganSach', db.String(100), nullable=False)
-    limit_amount = db.Column('SoTienGioiHan', db.Float, nullable=False)
+    limit_amount = db.Column('SoTienGioiHan', db.Numeric(15, 2), nullable=False)
     start_date = db.Column('NgayBatDau', db.Date, nullable=False)
     end_date = db.Column('NgayKetThuc', db.Date, nullable=False)
     created_at = db.Column('NgayTao', db.DateTime, default=datetime.now)
 
+    is_deleted = db.Column('DaXoa', db.Boolean, default=False)
     # Quan hệ Many-to-Many với Danh mục
     categories = db.relationship('Category', secondary=budget_category, backref=db.backref('budgets', lazy=True))
-
-
 
 # ==================================================
 # 8. CÁC BẢNG PHỤ TRỢ KHÁC
@@ -133,26 +136,26 @@ class Budget(db.Model):
 
 class AILog(db.Model):
     __tablename__ = 'ai_lichsu'
-    id = db.Column('MaAI_Log', db.String(8), primary_key=True)
-    user_id = db.Column('MaNguoiDung', db.String(8), db.ForeignKey('nguoidung.MaNguoiDung', ondelete='CASCADE'))
-    transaction_id = db.Column('MaGiaoDich', db.String(8), db.ForeignKey('giaodich.MaGiaoDich', ondelete='SET NULL'))
-    predicted_cat = db.Column('DanhMucDuDoan', db.String(8), db.ForeignKey('danhmuc.MaDanhMuc', ondelete='CASCADE'))
-    actual_cat = db.Column('DanhMucChinhXac', db.String(8), db.ForeignKey('danhmuc.MaDanhMuc', ondelete='CASCADE'))
+    id = db.Column('MaAI_Log', db.Integer, primary_key=True, autoincrement=True)
+    user_id = db.Column('MaNguoiDung', db.Integer, db.ForeignKey('nguoidung.MaNguoiDung', ondelete='CASCADE'))
+    transaction_id = db.Column('MaGiaoDich', db.Integer, db.ForeignKey('giaodich.MaGiaoDich', ondelete='SET NULL'))
+    predicted_cat = db.Column('DanhMucDuDoan', db.Integer, db.ForeignKey('danhmuc.MaDanhMuc', ondelete='CASCADE'))
+    actual_cat = db.Column('DanhMucChinhXac', db.Integer, db.ForeignKey('danhmuc.MaDanhMuc', ondelete='CASCADE'))
     confidence = db.Column('DoTinCay', db.Float)
     feedback = db.Column('PhanHoi', db.String(50)) # 'dung', 'sai'
     created_at = db.Column('NgayTao', db.DateTime, default=datetime.now)
 
 class TwoFactorAuth(db.Model):
     __tablename__ = 'xacthuc2fa'
-    user_id = db.Column('MaNguoiDung', db.String(8), db.ForeignKey('nguoidung.MaNguoiDung', ondelete='CASCADE'), primary_key=True)
+    user_id = db.Column('MaNguoiDung', db.Integer, db.ForeignKey('nguoidung.MaNguoiDung', ondelete='CASCADE'), primary_key=True)
     secret_key = db.Column('SecretKey', db.String(100), nullable=False)
     is_active = db.Column('DaKichHoat', db.Integer, default=0)
     backup_code = db.Column('MaDuPhong', db.String(200))
 
 class ChatbotLog(db.Model):
     __tablename__ = 'chatbot_lichsu'
-    id = db.Column('MaHoiThoai', db.String(8), primary_key=True)
-    user_id = db.Column('MaNguoiDung', db.String(8), db.ForeignKey('nguoidung.MaNguoiDung', ondelete='CASCADE'))
+    id = db.Column('MaHoiThoai', db.Integer, primary_key=True, autoincrement=True)
+    user_id = db.Column('MaNguoiDung', db.Integer, db.ForeignKey('nguoidung.MaNguoiDung', ondelete='CASCADE'))
     question = db.Column('NoiDungHoi', db.Text)
     answer = db.Column('NoiDungTraLoi', db.Text)
     created_at = db.Column('NgayTao', db.DateTime, default=datetime.now)
