@@ -3,6 +3,7 @@ from app import db
 from app.models import Wallet, Category
 from app.utils import api_login_required
 from sqlalchemy import or_
+from decimal import Decimal
 
 foundation_bp = Blueprint('foundation', __name__)
 
@@ -19,7 +20,7 @@ def manage_wallets():
         try:
             db.session.add(Wallet(
                 user_id=user_id,
-                name=data.get('name'), type=data.get('type'), balance=float(data.get('balance', 0))
+                name=data.get('name'), type=data.get('type'), balance=Decimal(str(data.get('balance', 0)))
             ))
             db.session.commit()
             return jsonify({'status': 'success'})
@@ -39,7 +40,7 @@ def modify_wallet(wallet_id):
             data = request.json
             wallet.name = data.get('name')
             wallet.type = data.get('type')
-            wallet.balance = float(data.get('balance', 0))
+            wallet.balance = Decimal(str(data.get('balance', 0)))
         
         db.session.commit()
         return jsonify({'status': 'success'})
@@ -71,17 +72,20 @@ def manage_categories():
 @api_login_required
 def modify_category(cat_id):
     user_id = session['user_id']
-    cat = Category.query.filter_by(id=cat_id, user_id=user_id, is_deleted=False).first()
-    if not cat: return jsonify({'status': 'error'}), 404
+    cat = Category.query.filter_by(id=cat_id, is_deleted=False).first()
+    if not cat: return jsonify({'status': 'error', 'message': 'Danh mục không tồn tại hoặc đã bị xóa.'}), 404
 
+    if cat.user_id != user_id:
+        return jsonify({'status': 'error', 'message': 'Bạn không có quyền sửa hoặc xóa danh mục mặc định của hệ thống!'}), 403
+    
     try:
         if request.method == 'DELETE':
             cat.is_deleted = True
         elif request.method == 'PUT':
             data = request.json
-            cat.name = data.get('name')
-            cat.type = data.get('type')
+            cat.name = data.get('name', cat.name)
+            cat.type = data.get('type', cat.type)
         
         db.session.commit()
-        return jsonify({'status': 'success'})
+        return jsonify({'status': 'success', 'message': 'Thao tác thành công!'})
     except Exception as e: return jsonify({'status': 'error', 'message': str(e)}), 500

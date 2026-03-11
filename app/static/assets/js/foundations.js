@@ -37,7 +37,7 @@ async function loadWalletsTable() {
 
 // 2. Hàm mở Modal Sửa
 function openEditWallet(id) {
-    const w = currentWallets.find(item => item.MaNguonTien === id);
+    const w = currentWallets.find(item => String(item.MaNguonTien) === String(id));
     if(!w) return;
 
     // Điền dữ liệu cũ
@@ -135,7 +135,7 @@ async function loadCategoriesTable() {
 
 // 3. Hàm mở Modal Sửa
 function openEditCategory(id) {
-    const c = currentCategories.find(item => item.MaDanhMuc === id);
+    const c = currentCategories.find(item => String(item.MaDanhMuc) === String(id));
     if(!c) return;
 
     // Điền dữ liệu cũ
@@ -151,9 +151,23 @@ function openEditCategory(id) {
 }
 
 async function deleteCategory(id) {
-    if(!confirm('Xóa danh mục này?')) return;
-    await fetch(`/api/categories/${id}`, {method: 'DELETE'});
-    loadCategoriesTable();
+    if(!confirm('Bạn có chắc chắn muốn xóa danh mục này?')) return;
+
+    try {
+        const res = await fetch(`/api/categories/${id}`, { method: 'DELETE' });
+        const data = await res.json(); // Hứng cục data từ Backend trả về
+        
+        if (res.ok) {
+            alert(data.message || 'Đã xóa danh mục thành công!');
+            loadCategoriesTable(); // Load lại bảng
+        } else {
+            // Hiển thị chính xác lý do không xóa được
+            alert(`Không thể xóa: ${data.message}`);
+        }
+    } catch (error) {
+        console.error("Lỗi xóa danh mục:", error);
+        alert('Lỗi kết nối đến máy chủ!');
+    }
 }
 
 // 4. Xử lý Submit (Thêm hoặc Sửa)
@@ -177,15 +191,17 @@ async function handleAddCategory(e) {
         body: JSON.stringify(data)
     });
 
+    const resData = await res.json();
+
     if(res.ok) {
-        alert(isEdit ? 'Cập nhật thành công!' : 'Thêm danh mục thành công!');
+        alert(resData.message || isEdit ? 'Cập nhật thành công!' : 'Thêm danh mục thành công!');
         document.getElementById('categoryForm').reset();
         document.getElementById('edit-category-id').value = ''; // Reset ID
         document.getElementById('categoryModalTitle').textContent = "Thêm Danh mục mới"; // Reset tiêu đề
         document.getElementById('categoryModal').style.display = 'none';
         loadCategoriesTable();
     } else {
-        alert('Lỗi xảy ra');
+        alert(`Lỗi: ${resData.message || 'Có lỗi xảy ra'}`);
     }
 }
 
