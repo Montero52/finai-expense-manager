@@ -1,7 +1,6 @@
 from flask import Blueprint, request, session, jsonify, Response, stream_with_context
 from functools import wraps
 from datetime import datetime, timedelta
-import uuid
 from sqlalchemy import func
 
 from app import db
@@ -124,9 +123,7 @@ def chat_ai():
                         yield chunk.text # Bắn ngay chữ này về Frontend
                 
                 # CHỈ LƯU DATABASE KHI ĐÃ NÓI XONG HOÀN TOÀN
-                log_id = str(uuid.uuid4())[:8]
                 db.session.add(ChatbotLog(
-                    id=log_id, 
                     user_id=user_id, 
                     question=user_question, 
                     answer=full_answer, 

@@ -32,7 +32,7 @@ def users():
     users = User.query.all()
     return render_template('admin/users.html', users=users)
 
-@admin_bp.route('/api/admin/users/<string:user_id>/role', methods=['PUT'])
+@admin_bp.route('/api/admin/users/<int:user_id>/role', methods=['PUT'])
 @admin_required
 def update_user_role(user_id):
     if user_id == session.get('user_id'):
@@ -50,7 +50,7 @@ def update_user_role(user_id):
         
     return jsonify({'status': 'error', 'message': 'Quyền không hợp lệ'}), 400
 
-@admin_bp.route('/api/admin/users/<string:user_id>/status', methods=['PUT'])
+@admin_bp.route('/api/admin/users/<int:user_id>/status', methods=['PUT'])
 @admin_required
 def update_user_status(user_id):
     if user_id == session.get('user_id'):

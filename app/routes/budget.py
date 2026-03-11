@@ -1,8 +1,7 @@
-import uuid
+from decimal import Decimal
 from datetime import datetime, date
 from flask import Blueprint, request, session, jsonify
-from sqlalchemy import func
-
+from sqlalchemy import func, or_
 from app import db
 from app.models import Budget, Category, Transaction
 from app.utils import api_login_required
@@ -16,7 +15,7 @@ def manage_budgets():
     
     if request.method == 'GET':
         try:
-            budgets = Budget.query.filter_by(user_id=user_id).all()
+            budgets = Budget.query.filter_by(user_id=user_id, is_deleted=False).all()
             result = []
             today = date.today()
             
@@ -65,17 +64,18 @@ def manage_budgets():
         data = request.json
         try:
             new_budget = Budget(
-                id=str(uuid.uuid4())[:8],
                 user_id=user_id,
                 name=data.get('name'),
-                limit_amount=float(data.get('amount')), # Dùng limit_amount
+                limit_amount=Decimal(str(data.get('amount'))),
                 start_date=datetime.strptime(data.get('start_date'), '%Y-%m-%d').date(),
                 end_date=datetime.strptime(data.get('end_date'), '%Y-%m-%d').date()
             )
             
             # Gắn các danh mục được chọn vào ngân sách
             cat_ids = data.get('category_ids', [])
-            selected_cats = Category.query.filter(Category.id.in_(cat_ids), Category.user_id == user_id).all()
+            selected_cats = Category.query.filter(
+                Category.id.in_(cat_ids),or_(Category.user_id == user_id, Category.user_id == None)
+            ).all()
             new_budget.categories.extend(selected_cats)
             
             db.session.add(new_budget)
@@ -88,15 +88,15 @@ def manage_budgets():
             traceback.print_exc()
             return jsonify({'status': 'error', 'message': str(e)}), 500
 
-@budget_bp.route('/api/budgets/<string:budget_id>', methods=['DELETE'])
+@budget_bp.route('/api/budgets/<int:budget_id>', methods=['DELETE'])
 @api_login_required
 def delete_budget(budget_id):
     try:
-        budget = Budget.query.filter_by(id=budget_id, user_id=session['user_id']).first()
+        budget = Budget.query.filter_by(id=budget_id, user_id=session['user_id'], is_deleted=False).first()
         if not budget:
             return jsonify({'status': 'error', 'message': 'Không tìm thấy'}), 404
             
-        db.session.delete(budget)
+        budget.is_deleted = True
         db.session.commit()
         return jsonify({'status': 'success'})
     except Exception as e:

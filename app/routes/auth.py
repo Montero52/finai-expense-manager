@@ -1,6 +1,5 @@
 from flask import Blueprint, render_template, request, session, redirect, url_for, flash
 from flask_mail import Message
-import uuid
 import secrets
 from datetime import datetime, timedelta
 
@@ -57,16 +56,16 @@ def register():
 
         try:
             # 1. Tạo User
-            new_user_id = str(uuid.uuid4())[:8]
-            new_user = User(id=new_user_id, name=fullname, email=email)
+            new_user = User(name=fullname, email=email)
             new_user.set_password(password)
             db.session.add(new_user)
             
+            db.session.flush()
+
             # 2. Tạo Setting & Ví mặc định
-            db.session.add(UserSetting(user_id=new_user_id))
+            db.session.add(UserSetting(user_id=new_user.id))
             db.session.add(Wallet(
-                id=str(uuid.uuid4())[:8],
-                user_id=new_user_id,
+                user_id=new_user.id,
                 name="Ví tiền mặt",
                 type="Tiền mặt",
                 balance=0
