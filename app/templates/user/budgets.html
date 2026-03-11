@@ -27,11 +27,11 @@
     <div id="budgetModal" class="modal">
         <div class="modal-content">
             <div class="modal-header">
-                <h2>Tạo Ngân sách mới</h2>
-                <span class="modal-close" id="closeBudgetModal">&times;</span>
+                <h2 id="budgetModalTitle">Tạo Ngân sách mới</h2> <span class="modal-close" id="closeBudgetModal">&times;</span>
             </div>
             
             <form id="budgetForm" class="modal-body">
+                <input type="hidden" id="editBudgetId" value="">
                 <div class="form-group">
                     <label for="budgetName">Tên Ngân sách</label>
                     <input type="text" id="budgetName" placeholder="Ví dụ: Ngân sách Ăn uống" required>

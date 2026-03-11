@@ -108,21 +108,30 @@
     max-height: 200px;
     overflow-y: auto;
     border: 1px solid #ddd;
-    border-radius: 5px;
-    padding: 0.5rem;
+    border-radius: 8px; /* Tăng bo góc một chút cho hiện đại */
+    padding: 5px;
+    background-color: #fff;
 }
 
 .category-select-list label {
-    display: block;
-    padding: 0.5rem 0.75rem;
+    display: flex;         /* QUAN TRỌNG: Kích hoạt flexbox */
+    align-items: center;    /* QUAN TRỌNG: Căn giữa ô checkbox và chữ theo chiều dọc */
+    padding: 8px 12px;
     border-radius: 5px;
     cursor: pointer;
+    transition: background 0.2s; /* Thêm hiệu ứng mượt khi hover */
+    margin-bottom: 2px;
 }
 
 .category-select-list label:hover {
     background-color: #f0f2f5;
+    color: #2980b9; /* Đổi màu chữ nhẹ khi hover để người dùng dễ nhận biết */
 }
 
-.category-select-list label input {
-    margin-right: 10px;
+.category-select-list label input[type="checkbox"] {
+    margin: 0 12px 0 0;    /* Xóa margin mặc định và chỉ để lại khoảng cách bên phải */
+    width: 16px;           /* Cố định kích thước để không bị biến dạng */
+    height: 16px;
+    cursor: pointer;
+    flex-shrink: 0;        /* Đảm bảo ô checkbox không bị co lại khi chữ quá dài */
 }

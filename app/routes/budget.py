@@ -88,17 +88,41 @@ def manage_budgets():
             traceback.print_exc()
             return jsonify({'status': 'error', 'message': str(e)}), 500
 
-@budget_bp.route('/api/budgets/<int:budget_id>', methods=['DELETE'])
+@budget_bp.route('/api/budgets/<int:budget_id>', methods=['PUT', 'DELETE'])
 @api_login_required
-def delete_budget(budget_id):
+def modify_budget(budget_id):
+    user_id = session['user_id']
     try:
-        budget = Budget.query.filter_by(id=budget_id, user_id=session['user_id'], is_deleted=False).first()
+        budget = Budget.query.filter_by(id=budget_id, user_id=user_id, is_deleted=False).first()
         if not budget:
-            return jsonify({'status': 'error', 'message': 'Không tìm thấy'}), 404
+            return jsonify({'status': 'error', 'message': 'Không tìm thấy ngân sách này!'}), 404
             
-        budget.is_deleted = True
+        if request.method == 'DELETE':
+            budget.is_deleted = True
+            
+        elif request.method == 'PUT':
+            data = request.json
+            budget.name = data.get('name')
+            budget.limit_amount = Decimal(str(data.get('amount')))
+            budget.start_date = datetime.strptime(data.get('start_date'), '%Y-%m-%d').date()
+            budget.end_date = datetime.strptime(data.get('end_date'), '%Y-%m-%d').date()
+            
+            # Cập nhật lại danh sách các Danh mục được áp dụng
+            cat_ids = data.get('category_ids', [])
+            selected_cats = Category.query.filter(
+                Category.id.in_(cat_ids),
+                or_(Category.user_id == user_id, Category.user_id == None)
+            ).all()
+            
+            # SQLAlchemy sẽ tự động xóa các danh mục cũ và gắn danh mục mới vào
+            budget.categories = selected_cats
+
         db.session.commit()
-        return jsonify({'status': 'success'})
+        return jsonify({'status': 'success', 'message': 'Cập nhật thành công!'})
+        
     except Exception as e:
         db.session.rollback()
+        import traceback
+        print("=== LỖI API PUT/DELETE BUDGET ===")
+        traceback.print_exc()
         return jsonify({'status': 'error', 'message': str(e)}), 500

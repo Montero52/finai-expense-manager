@@ -1,16 +1,51 @@
 document.addEventListener("DOMContentLoaded", function() {
+    let currentBudgets = [];
     // --- UI Modal Logic ---
     const modal = document.getElementById('budgetModal');
-    
-    document.getElementById('openBudgetModal').onclick = () => {
+
+    document.getElementById('openBudgetModal').onclick = async () => {
+        document.getElementById('budgetForm').reset(); // Xóa dữ liệu cũ
+        document.getElementById('editBudgetId').value = ''; // Xóa ID sửa (để thành Thêm mới)
+        document.getElementById('budgetModalTitle').textContent = "Tạo Ngân sách mới";
+        
+        await loadCategoriesForModal(); // Đợi load checkbox xong
         modal.style.display = 'flex';
-        loadCategoriesForModal(); // Tải danh mục mỗi khi mở modal
+
     }
     document.getElementById('closeBudgetModal').onclick = () => modal.style.display = 'none';
     document.getElementById('cancelBudgetModal').onclick = (e) => { 
         e.preventDefault(); 
         modal.style.display = 'none'; 
     };
+
+    window.openEditBudget = async function(id) {
+        // Tìm ngân sách đang muốn sửa (nhớ bọc String để tránh lỗi ID int/string)
+        const b = currentBudgets.find(item => String(item.id) === String(id));
+        if (!b) return;
+
+        // Bơm dữ liệu vào form
+        document.getElementById('editBudgetId').value = b.id;
+        document.getElementById('budgetName').value = b.name;
+        document.getElementById('budgetAmount').value = b.amount; 
+        document.getElementById('budgetStart').value = b.start_date;
+        document.getElementById('budgetEnd').value = b.end_date;
+        document.getElementById('budgetModalTitle').textContent = "Cập nhật Ngân sách";
+
+        // Tải danh sách checkbox danh mục TRƯỚC
+        await loadCategoriesForModal();
+
+        // Sau đó đánh dấu (tick) vào các danh mục đã chọn
+        const catIds = b.categories.map(c => String(c.id));
+        const checkboxes = document.querySelectorAll('input[name="categories"]');
+        checkboxes.forEach(cb => {
+            if (catIds.includes(String(cb.value))) {
+                cb.checked = true;
+            }
+        });
+
+        // Hiển thị Modal
+        modal.style.display = 'flex';
+    }
 
     // Tải danh mục vào Modal
     async function loadCategoriesForModal() {
@@ -35,6 +70,7 @@ document.addEventListener("DOMContentLoaded", function() {
         try {
             const res = await fetch('/api/budgets');
             const budgets = await res.json();
+            currentBudgets = budgets;
             const grid = document.getElementById('budgetGrid');
             grid.innerHTML = '';
 
@@ -72,6 +108,7 @@ document.addEventListener("DOMContentLoaded", function() {
                         <div class="budget-card-header">
                             <h3></i> ${b.name}</h3>
                             <div class="budget-actions">
+                                <button class="btn-icon btn-edit" onclick="openEditBudget('${b.id}')"><i class="fas fa-edit"></i></button>
                                 <button class="btn-icon btn-delete" onclick="deleteBudget('${b.id}')"><i class="fas fa-trash"></i></button>
                             </div>
                         </div>
@@ -112,23 +149,29 @@ document.addEventListener("DOMContentLoaded", function() {
 
         const data = {
             name: document.getElementById('budgetName').value,
-            amount: parseMoneyToBase(document.getElementById('budgetAmount').value),
+            amount: document.getElementById('budgetAmount').value,
             start_date: document.getElementById('budgetStart').value,
             end_date: document.getElementById('budgetEnd').value,
             category_ids: selectedCats
         };
+        
+        const editId = document.getElementById('editBudgetId').value;
+        const isEdit = !!editId;
+        const url = isEdit ? `/api/budgets/${editId}` : '/api/budgets';
+        const method = isEdit ? 'PUT' : 'POST';
 
         try {
-            const res = await fetch('/api/budgets', {
-                method: 'POST',
+            const res = await fetch(url, {
+                method: method,
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(data)
             });
 
             if (res.ok) {
                 modal.style.display = 'none';
-                this.reset();
+                document.getElementById('budgetForm').reset();
                 loadBudgets(); // Tải lại giao diện sau khi thêm thành công
+                alert(isEdit ? "Cập nhật ngân sách thành công!" : "Tạo ngân sách thành công!");
             } else {
                 const errData = await res.json();
                 alert(`Lỗi: ${errData.message || "Không thể tạo ngân sách."}`);
