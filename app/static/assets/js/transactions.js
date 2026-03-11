@@ -246,7 +246,7 @@ async function deleteTransaction(id) {
 }
 
 function startEdit(id) {
-    const t = currentTransactions.find(item => item.id === id);
+    const t = currentTransactions.find(item => String(item.id) === id);
     if (!t) return;
 
     document.querySelector('.transaction-form-card').scrollIntoView({ behavior: 'smooth' });
