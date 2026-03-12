@@ -1,7 +1,7 @@
 # FinAI | Intelligent Expense Manager
 
 [![Python 3.11+](https://img.shields.io/badge/python-3.11+-blue.svg)](https://www.python.org/)
-[![Gemini 2.0 Flash](https://img.shields.io/badge/AI-Gemini_2.0_Flash-8E44AD.svg)](https://aistudio.google.com/)
+[![Gemini 2.x Flash](https://img.shields.io/badge/AI-Gemini_2.x_Flash-8E44AD.svg)](https://aistudio.google.com/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](https://opensource.org/licenses/MIT)
 [![Flask](https://img.shields.io/badge/Framework-Flask-lightgrey.svg)](https://flask.palletsprojects.com/)
 [![Chart.js](https://img.shields.io/badge/Frontend-Chart.js-ff6384.svg)](https://www.chartjs.org/)
@@ -21,6 +21,7 @@ FinAI revolutionizes manual expense tracking by acting as a smart financial assi
 ### 1. Global Multi-Currency Architecture
 * **Base Currency System:** Maintains absolute data integrity by storing all financial records in a unified Base Currency (VND) within the SQLite database.
 * **Dynamic Two-Way Conversion:** Seamlessly converts inputs and formats display values (USD/VND) in real-time across all dashboards, charts, and HTML input forms without altering raw DB values.
+* **User-Level Preferences:** Each user can choose their preferred display currency in the in-app Settings screen; preferences are persisted per account.
 
 ### 2. AI-Powered NLP & RAG Pipeline
 * **Zero-Click Categorization:** Parses natural language (e.g., "Dinner with friends 500k") to automatically extract amounts, infer context, and assign custom categories.
@@ -31,17 +32,22 @@ FinAI revolutionizes manual expense tracking by acting as a smart financial assi
 * **Budget Enforcement:** Real-time progress tracking, spatial logic for expense distribution, and deadline countdowns for strict budget management.
 * **Batch Exporting:** Automated pipeline using Pandas to transcode historical data into native `.xlsx` or print-friendly PDF formats.
 
+### 4. Admin & AI Governance Layer
+* **Admin Dashboard & RBAC:** Dedicated admin area for system-wide user management, role updates (`user` / `admin`), and account status control.
+* **Central Category Management:** Global master category management so admins can define and maintain the base income/expense taxonomy for all users.
+* **AI Monitoring & Chatbot Logs:** Built‑in pages for reviewing AI classification logs, chatbot conversations, and cleaning up old records for privacy/compliance.
+
 ## Roadmap (Upcoming Features)
 
-The core MVP is fully operational. The following modules are in the active development pipeline:
+The core MVP (including admin dashboard and AI monitoring) is fully operational. The following modules are in the active development pipeline:
 
-- [ ] **Admin Dashboard:** System-wide analytics, user management, and Role-Based Access Control (RBAC).
-- [ ] **AI Quota Monitoring:** A dashboard to track Gemini API usage limits and prevent rate-limiting.
+- [x] **Admin Dashboard:** System-wide analytics, user management, and Role-Based Access Control (RBAC).
+- [x] **AI Monitoring & Logs:** Admin views for AI categorization quality and chatbot conversations, plus log cleanup tools.
 - [ ] **Advanced Budget Alerts:** Automated email/Telegram notifications when a user reaches 80% or 100% of their budget.
 - [ ] **Database Migration:** Upgrading from SQLite to PostgreSQL for production readiness.
 
 ## Tech Stack
-* **Core AI:** Google Gemini 2.0 Flash, RAG Architecture.
+* **Core AI:** Google Gemini 2.x Flash (currently 2.5 Flash), RAG Architecture.
 * **Backend:** Python, Flask, SQLAlchemy ORM.
 * **Processing:** Pandas, Global JS `Intl.NumberFormat` implementations.
 * **Storage:** SQLite (Transactional DB).
@@ -49,17 +55,18 @@ The core MVP is fully operational. The following modules are in the active devel
 
 ## Project Structure
 ```text
-finai-expense-manager/
+AI_Finance_Manager/
 ├── app/
-│   ├── models.py        # SQLAlchemy Database Schemas
-│   ├── routes/          # Flask Blueprints (Auth, Dashboard, API)
-│   ├── static/          # Frontend assets (CSS, JS logic, Icons)
-│   └── templates/       # Jinja2 Web UI templates (HTML)
-├── assets/images/       # Project demonstrations (GIFs/Images)
-├── data/                # Local SQLite database
-├── .env.example         # Environment variables template
-├── app.py               # Main entry point & Flask initialization
-├── create_admin.py      # Utility script for DB initialization
+│   ├── __init__.py      # Flask app, database, blueprint registration
+│   ├── models.py        # SQLAlchemy database schemas
+│   ├── routes/          # Flask blueprints (auth, dashboard, AI, admin, ...)
+│   ├── static/          # Frontend assets (CSS, JS, icons)
+│   └── templates/       # Jinja2 HTML templates
+├── instance/            # Local SQLite database (quanlychitieu.db)
+├── config.py            # Application configuration & .env loading
+├── run.py               # Main entry point for local development
+├── create_admin.py      # Utility script for initial admin account
+├── seed_data.py         # Optional sample data seeding
 └── requirements.txt     # Project dependencies
 ```
 
@@ -85,6 +92,8 @@ source venv/bin/activate # Windows: venv\Scripts\activate
 pip install -r requirements.txt
 ```
 
+> If you downloaded/cloned this project under a different folder name (e.g. `AI_Finance_Manager`), just `cd` into that directory instead.
+
 ### 3. Configuration
 
 Create a `.env` file in the root directory and add your credentials:
@@ -92,16 +101,18 @@ Create a `.env` file in the root directory and add your credentials:
 ```env
 SECRET_KEY=your_secure_secret_key
 GEMINI_API_KEY=your_google_ai_studio_api_key
+MAIL_USERNAME=your_gmail_address
+MAIL_PASSWORD=your_app_password
 ```
 
 ### 4. Database Setup & Launch
 
 ```bash
-# Initialize the database and create default roles
+# Initialize the database and create the default admin account (optional but recommended)
 python create_admin.py
 
-# Launch the Dashboard
-python app.py
+# Launch the dashboard
+python run.py
 ```
 
 *The application will be available at `http://127.0.0.1:5000`.*
