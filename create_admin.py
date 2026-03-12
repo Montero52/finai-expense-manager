@@ -1,10 +1,11 @@
+import os
 from app import app, db
-from app.models import User, UserSetting, Wallet
+from app.models import User, Wallet
 
-# Cấu hình Admin
-ADMIN_EMAIL = "admin@finance.com"
-ADMIN_PASS = "admin123"
-ADMIN_NAME = "Quản Trị Viên Hệ Thống"
+# Cấu hình Admin (ưu tiên lấy từ biến môi trường, fallback cho môi trường dev)
+ADMIN_EMAIL = os.environ.get("ADMIN_EMAIL", "admin@finance.com")
+ADMIN_PASS = os.environ.get("ADMIN_PASSWORD", "admin123")
+ADMIN_NAME = os.environ.get("ADMIN_NAME", "Quản Trị Viên Hệ Thống")
 
 def create_admin():
     # Cần chạy trong Application Context của Flask để truy cập được DB
