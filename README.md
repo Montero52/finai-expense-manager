@@ -85,8 +85,8 @@ git clone https://github.com/Montero52/finai-expense-manager.git
 cd finai-expense-manager
 
 # Setup Virtual Environment
-python -m venv venv
-source venv/bin/activate # Windows: venv\Scripts\activate
+python -m venv .venv
+source .venv/bin/activate # Windows: .venv\Scripts\activate
 
 # Install Dependencies
 pip install -r requirements.txt

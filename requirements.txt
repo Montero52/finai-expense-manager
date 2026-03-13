@@ -1,8 +1,12 @@
 Flask==3.1.2
-flask_mail==0.10.0
-flask_sqlalchemy==3.1.1
-pandas==2.3.3
-python-dotenv==1.2.1
+Flask-Mail==0.10.0
+Flask-SQLAlchemy==3.1.1
 SQLAlchemy==2.0.45
 Werkzeug==3.1.5
-google-generativeai
+
+pandas==2.3.3
+openpyxl
+
+python-dotenv==1.2.1
+
+google-genai
